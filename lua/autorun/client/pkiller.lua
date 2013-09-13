@@ -30,4 +30,4 @@ local function propkill()
 end
 
 concommand.Add("lenny_pkill", propkill)
-print("Lenny Propkill initialized")
+print("Lenny Propkill initialized !!!")
