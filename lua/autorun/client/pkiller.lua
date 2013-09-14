@@ -28,6 +28,41 @@ local function propkill()
 		RunConsoleCommand("undo")
 	end )
 end
-
 concommand.Add("lenny_pkill", propkill)
-print("!!!  Lenny !!! Propkill !!! initialized !!!")
+
+local toggler = 0
+local function tttpropkill()
+	if toggler == 0 then
+		toggler = 1
+		--[[LocalPlayer():SetEyeAngles(Angle(0,LocalPlayer():GetAimVector():Angle().y+180,0))   --since the magneto stick loses control when we turn too fast, I can't use this :/]]
+		hook.Add("CalcView", "pcam", function(ply, ori, ang, fov, nz, fz)
+ 			local view = {}
+
+			view.origin = ori
+			view.angles = Angle(0,ang.y+180, 0)
+			view.fov = fov
+
+ 			return view		
+		end)
+	else
+		hook.Remove("CalcView", "pcam")
+		local preaim = LocalPlayer():GetAimVector():Angle()
+		local newaim = LocalPlayer():GetAimVector():Angle()
+		hook.Add("CreateMove", "180!", function(cmd)
+			newaim = Angle(0,newaim.y+10,0)
+			cmd:SetViewAngles(newaim)
+			if newaim == Angle(0,preaim.y+120,0) then
+				RunConsoleCommand("+attack2")
+				timer.Simple(.1, function()
+					RunConsoleCommand("-attack2")
+				end)
+			end
+			if newaim == Angle(0,preaim.y+180,0) then
+				hook.Remove("CreateMove", "180!")
+			end
+		end)
+		toggler = 0
+	end
+end
+
+concommand.Add("lenny_tttpkill", tttpropkill)
