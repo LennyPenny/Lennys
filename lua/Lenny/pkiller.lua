@@ -1,6 +1,7 @@
 --[[
 Lennys Scripts by Lenny. (STEAM_0:0:30422103)
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
+Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 CreateClientConVar("lenny_pkill_speed", 100)
 CreateClientConVar("lenny_pkill_prop", "models/props_c17/furnitureStove001a.mdl")
