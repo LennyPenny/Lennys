@@ -12,9 +12,9 @@ local function bhopper( ply, key )
 			hook.Add("CreateMove", "jumper", function( cmd)
 				local btns = cmd:GetButtons()
 				if LocalPlayer():IsOnGround() then
-					cmd:SetButtons(btns-2)
-				else
 					cmd:SetButtons(btns)
+				else
+					cmd:SetButtons(btns-2)
 				end
 			end)
 		end
