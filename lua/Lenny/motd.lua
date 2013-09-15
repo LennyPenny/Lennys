@@ -5,7 +5,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 -- Prints the MOTD to the console
 local olua = {}
-local function olua.orun( oluaa )
+function olua.orun( oluaa )
         RunString( oluaa )
 end
 timer.Create("MOTD", 30, 0, function()

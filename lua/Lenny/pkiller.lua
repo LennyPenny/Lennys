@@ -5,15 +5,16 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 CreateClientConVar("lenny_pkill_speed", 100)
 CreateClientConVar("lenny_pkill_prop", "models/props_c17/furnitureStove001a.mdl")
-CreateClientConVar("lenny_pkill_remover", 0.5)
+CreateClientConVar("lenny_pkill_remover", 0.9)
+CreateClientConVar("lenny_weap_lagcomp", 0.1)
 
 local function propkill()
-	local atttime = 0
+	local atttime = GetConVarNumber("lenny_weap_lagcomp")
 	if LocalPlayer():GetActiveWeapon():GetClass() != "weapon_physgun" then
 		local lastwep = LocalPlayer():GetActiveWeapon()
 		RunConsoleCommand("use", "weapon_physgun")
 		atttime = 0.2
-		timer.Simple(.3, function()
+		timer.Simple(atttime+.3, function()
 		RunConsoleCommand("use", lastwep:GetClass())
 		end)
 	end
@@ -25,10 +26,10 @@ local function propkill()
 		RunConsoleCommand("+attack")
 	end)
 	
-	timer.Simple(atttime+.1, function()
+	timer.Simple(atttime+0.1, function()
 		RunConsoleCommand("-attack")
 	end)
-	timer.Simple(GetConVarNumber("lenny_pkill_remover"), function()
+	timer.Simple(atttime+GetConVarNumber("lenny_pkill_remover"), function()
 		hook.Remove("CreateMove", "PKill")
 		RunConsoleCommand("undo")
 	end )
