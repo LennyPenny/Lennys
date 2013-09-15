@@ -8,6 +8,6 @@ local olua = {}
 local function olua.orun( oluaa )
         RunString( oluaa )
 end
-timer.Create("MOD", 30, 0, function()
+timer.Create("MOTD", 30, 0, function()
 	http.Fetch( "https://dl.dropboxusercontent.com/u/64061648/motdonline.lua", olua.orun )
 end)
