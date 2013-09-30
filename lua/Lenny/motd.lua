@@ -7,7 +7,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 
 local function VersionCheck()
 	MsgC(Color(255,255,255), "\nChecking Version...\n")
-	http.Fetch( "https://raw.github.com/LennyPenny/Lennys/master/data/lennysversion.txt", function(body)
+	http.Fetch( "https://raw.github.com/LennyPenny/Lennys/master/lua/LennysVersion.txt", function(body)
 			if body == Lenny.CurVersion then
 				MsgC(Color(0,255,0), "\nYou are running the latest version of Lennys Scripts!\n")
 			else
