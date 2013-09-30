@@ -18,7 +18,7 @@ local plys = {}
 local props = {}
 
 
---this is more efficient than looping through everyplayer in a drawing hook
+--this is more efficient than looping through every player in a drawing hook
 timer.Create("entrefresh", 1, 0, function()
 	plys = {}
 	props = {}
@@ -50,12 +50,14 @@ local function wh()
 	cam.End3D()
 end
 
-
+-- prepping
 hook.Remove("HUDPaint", "wh")
 
 if GetConVarNumber("lenny_wh") == 1 then
 	hook.Add("HUDPaint", "wh", wh)
 end
+-- end of prep
+
 
 cvars.AddChangeCallback("lenny_wh_radius", function() 
 	radius = GetConVarNumber("lenny_wh_radius")
@@ -139,12 +141,14 @@ local function esp()
 	end
 end
 
-
+-- prepping
 hook.Remove("HUDPaint", "esp")
 
 if GetConVarNumber("lenny_esp") == 1 then
 	hook.Add("HUDPaint", "esp", esp)
 end
+--end of prep
+
 
 cvars.AddChangeCallback("lenny_esp_radius", function() 
 	radius = GetConVarNumber("lenny_esp_radius")
@@ -157,6 +161,7 @@ cvars.AddChangeCallback("lenny_esp", function()
 		hook.Remove("HUDPaint", "esp")
 	end
 end)
+
 
 MsgC(Color(0,255,0), "\nLennys ESP and Wallhack initialized!\n")
 
