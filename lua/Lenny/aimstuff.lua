@@ -4,7 +4,4 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 
--- This is the file where I try stuff out. (Such as badly documented functions, etc...)
-
-
-MsgC(Color(0,255,0), "\nLennys Sandbox initialized!\n")
+MsgC(Color(0,255,0), "\nLenny AimStuff initialized!\n")
