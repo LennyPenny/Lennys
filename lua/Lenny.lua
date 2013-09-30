@@ -6,7 +6,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 
 Lenny = {}
 
-Lenny.CurVersion = "2.1"
+Lenny.CurVersion = file.Read("LennysVersion.txt", "DATA")
 
 local function ReloadLennys()
 	include("Lenny.lua")
