@@ -29,7 +29,7 @@ local function VersionCheck()
 	)
 end
 
-timer.Simple(.5, VersionCheck)
+timer.Simple(.75, VersionCheck)
 
 concommand.Add("lenny_CheckVersion", VersionCheck)
 
