@@ -9,9 +9,11 @@ CreateClientConVar("lenny_triggerbot", 0)
 
 local function triggerbot(cmd)
 	target = LocalPlayer():GetEyeTrace().Entity
-	if target and !(LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physgun") and !(LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physcannon") then
-		if target:IsPlayer() or target:IsNPC() then
-			cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
+	if target then
+		if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+			if target:IsPlayer() or target:IsNPC() then
+				cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
+			end	
 		end
 	else
 		cmd:SetButtons(cmd:GetButtons())

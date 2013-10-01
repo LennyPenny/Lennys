@@ -7,12 +7,15 @@ CreateClientConVar("lenny_aim", 0)
 
 local function shitaimbad(cmd)
 	target = LocalPlayer():GetEyeTrace().Entity
-	if target and !(LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physgun") and !(LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physcannon") then
+	if target  then
 		if target:IsPlayer() or target:IsNPC() then
-			hat = target:LookupBone("ValveBiped.Bip01_Head1")
-			if hat then
-				hatpos, hatang = target:GetBonePosition(hat)
-				cmd:SetViewAngles((hatpos - LocalPlayer():GetShootPos()):Angle())
+			print()
+			if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+				hat = target:LookupBone("ValveBiped.Bip01_Head1")
+				if hat then
+					hatpos, hatang = target:GetBonePosition(hat)
+					cmd:SetViewAngles((hatpos - LocalPlayer():GetShootPos()):Angle())
+				end
 			end
 		end
 	end
