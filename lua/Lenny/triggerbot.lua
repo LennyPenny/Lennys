@@ -8,15 +8,17 @@ CreateClientConVar("lenny_triggerbot", 0)
 
 
 local function triggerbot(cmd)
-	target = LocalPlayer():GetEyeTrace().Entity
-	if target then
-		if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
-			if target:IsPlayer() or target:IsNPC() then
-				cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
-			end	
+	if LocalPlayer():Alive() then
+		local target = LocalPlayer():GetEyeTrace().Entity
+		if target then
+			if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+				if target:IsPlayer() or target:IsNPC() then
+					cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
+				end	
+			end
+		else
+			cmd:SetButtons(cmd:GetButtons())
 		end
-	else
-		cmd:SetButtons(cmd:GetButtons())
 	end
 end
 

@@ -97,47 +97,125 @@ timer.Create("espentrefresh", 1, 0, function()
 	espsa = {}
 	espnpcs = {}
 	espfriends = {}
-	for k, v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), espradius)) do
-		if (v:IsPlayer() and !(LocalPlayer() == v)) then
-			if v:IsSuperAdmin() then
-				table.insert(espsa, v)
-			elseif v:IsAdmin() then
-				table.insert(espadmins, v)
-			else
-				if !(v:GetFriendStatus() == "friend") then
-					table.insert(espplys, v)
+	if espradius != 0 then
+		for k, v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), espradius)) do
+			if (v:IsPlayer() and !(LocalPlayer() == v)) then
+				if v:IsSuperAdmin() then
+					table.insert(espsa, v)
+				elseif v:IsAdmin() then
+					table.insert(espadmins, v)
 				else
-					table.insert(espfriends, v)
+					if !(v:GetFriendStatus() == "friend") then
+						table.insert(espplys, v)
+					else
+						table.insert(espfriends, v)
+					end
 				end
+			elseif v:IsNPC() then
+				table.insert(espnpcs, v)
 			end
-		elseif v:IsNPC() then
-			table.insert(espnpcs, v)
+		end
+	else
+		for k, v in pairs(ents.GetAll()) do
+			if (v:IsPlayer() and !(LocalPlayer() == v)) then
+				if v:IsSuperAdmin() then
+					table.insert(espsa, v)
+				elseif v:IsAdmin() then
+					table.insert(espadmins, v)
+				else
+					if !(v:GetFriendStatus() == "friend") then
+						table.insert(espplys, v)
+					else
+						table.insert(espfriends, v)
+					end
+				end
+			elseif v:IsNPC() then
+				table.insert(espnpcs, v)
+			end
 		end
 	end
 end)
 
+concommand.Add("lenny_printadmins", function()
+	MsgC(Color(0,255,0), "\nSuper Admins:\n")
+	PrintTable(espsa)
+	MsgC(Color(0,255,0), "\n------------------------------------------------\n")
+	MsgC(Color(0,255,0), "\nAdmins\n")
+	PrintTable(espadmins)
+	MsgC(Color(0,255,0), "\n------------------------------------------------\n")
+end)
+
+-- fuck vectors now.
+local function realboxesp(min, max, diff, ply)
+	cam.Start3D()
+	
+		--vertical lines
+
+		render.DrawLine( min, min+Vector(0,0,diff.z), Color(0,0,255) )
+		render.DrawLine( min+Vector(diff.x,0,0), min+Vector(diff.x,0,diff.z), Color(0,0,255) )
+		render.DrawLine( min+Vector(0,diff.y,0), min+Vector(0,diff.y,diff.z), Color(0,0,255) )
+		render.DrawLine( min+Vector(diff.x,diff.y,0), min+Vector(diff.x,diff.y,diff.z), Color(0,0,255) )
+
+		--horizontal lines top
+		render.DrawLine( max, max-Vector(diff.x,0,0) , Color(0,0,255) )
+		render.DrawLine( max, max-Vector(0,diff.y,0) , Color(0,0,255) )
+		render.DrawLine( max-Vector(diff.x, diff.y,0), max-Vector(diff.x,0,0) , Color(0,0,255) )
+		render.DrawLine( max-Vector(diff.x, diff.y,0), max-Vector(0,diff.y,0) , Color(0,0,255) )
+
+		--horizontal lines bottom
+		render.DrawLine( min, min+Vector(diff.x,0,0) , Color(0,255,0) )
+		render.DrawLine( min, min+Vector(0,diff.y,0) , Color(0,255,0) )
+		render.DrawLine( min+Vector(diff.x, diff.y,0), min+Vector(diff.x,0,0) , Color(0,255,0) )
+		render.DrawLine( min+Vector(diff.x, diff.y,0), min+Vector(0,diff.y,0) , Color(0,255,0) )
+
+		-- extra
+		--if ply:IsNPC() then return end
+		--render.DrawLine(ply:GetShootPos(), ply:GetEyeTrace().HitPos, Color(255,0,0))
+		
+		
+	cam.End3D()
+end
 
 
 local function esp()
+	--text esp
 	for k, v in pairs(espnpcs) do
-		local npcpos = (v:GetPos()+Vector(0,0,75)):ToScreen()
-		draw.DrawText("[NPC]" ..v:GetClass(), "Default", npcpos.x, npcpos.y, Color(0,255,255,255), 1)
+		local min, max = v:WorldSpaceAABB()
+		local diff = max-min
+		realboxesp(min, max, diff, v)
+		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+		draw.DrawText("[NPC]" ..v:GetClass(), "Default", pos.x, pos.y-10, Color(255,0,0,255), 1)
+		draw.DrawText("[NPC]" ..v:GetClass(), "Default", 100, 100, Color(255,0,0,255), 1)
 	end
 	for k,v in pairs(espplys) do
-		local plypos = (v:GetPos()+Vector(0,0,75)):ToScreen()
-		draw.DrawText(v:GetName(), "Default", plypos.x, plypos.y, Color(255,255,0,255), 1)
+		local min, max = v:WorldSpaceAABB()
+		local diff = max-min
+		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+		realboxesp(min, max, diff, v)
+		draw.DrawText(v:GetName(), "Default", pos.x, pos.y-10, Color(255,255,0,255), 1)
 	end
 	for k,v in pairs(espadmins) do
-		local plypos = (v:GetPos()+Vector(0,0,75)):ToScreen()
-		draw.DrawText("[Admin]"..v:GetName(), "Default", plypos.x, plypos.y, Color(255,0,0,255), 1)
+		if v then
+			local min, max = v:WorldSpaceAABB()
+			local diff = max-min
+			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+			realboxesp(min, max, diff, v)
+			draw.DrawText("[Admin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,0,255), 1)
+		end
 	end
 	for k,v in pairs(espsa) do
-		local plypos = (v:GetPos()+Vector(0,0,75)):ToScreen()
-		draw.DrawText("[SuperAdmin]"..v:GetName(), "Default", plypos.x, plypos.y, Color(255,0,255,255), 1)
+		local min, max = v:WorldSpaceAABB()
+		local diff = max-min
+		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+		realboxesp(min, max, diff, v)
+		draw.DrawText("[SuperAdmin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,255,255), 1)
 	end
 	for k,v in pairs(espfriends) do
-		local plypos = (v:GetPos()+Vector(0,0,75)):ToScreen()
-		draw.DrawText("[Friend]"..v:GetName(), "Default", plypos.x, plypos.y, Color(0,255,0,255), 1)
+		local min, max = v:WorldSpaceAABB()
+		local diff = max-min
+		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+		realboxesp(min, max, diff, v)
+		draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255), 1)
 	end
 end
 

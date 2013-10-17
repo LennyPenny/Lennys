@@ -21,10 +21,11 @@ end
 
 -- preperation
 hook.Remove("CreateMove", "bunnyhop")
-
+timer.Simple(1, function()
 if GetConVarNumber("lenny_bhop") == 1 then
 	hook.Add("CreateMove", "bunnyhop", bhopper)
 end
+end)
 -- end of prep
 
 

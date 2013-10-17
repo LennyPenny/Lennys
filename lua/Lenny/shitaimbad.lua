@@ -9,12 +9,13 @@ local function shitaimbad(cmd)
 	target = LocalPlayer():GetEyeTrace().Entity
 	if target  then
 		if target:IsPlayer() or target:IsNPC() then
-			print()
-			if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
-				hat = target:LookupBone("ValveBiped.Bip01_Head1")
-				if hat then
-					hatpos, hatang = target:GetBonePosition(hat)
-					cmd:SetViewAngles((hatpos - LocalPlayer():GetShootPos()):Angle())
+			if LocalPlayer():Health()>0 then
+				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+					hat = target:LookupBone("ValveBiped.Bip01_Head1")
+					if hat then
+						hatpos, hatang = target:GetBonePosition(hat)
+						cmd:SetViewAngles((hatpos - LocalPlayer():GetShootPos()):Angle())
+					end
 				end
 			end
 		end
