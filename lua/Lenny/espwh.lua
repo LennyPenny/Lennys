@@ -180,22 +180,26 @@ end
 local function esp()
 	--text esp
 	for k, v in pairs(espnpcs) do
-		local min, max = v:WorldSpaceAABB()
-		local diff = max-min
-		realboxesp(min, max, diff, v)
-		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-		draw.DrawText("[NPC]" ..v:GetClass(), "Default", pos.x, pos.y-10, Color(255,0,0,255), 1)
-		draw.DrawText("[NPC]" ..v:GetClass(), "Default", 100, 100, Color(255,0,0,255), 1)
+		if v:IsValid() then
+			local min, max = v:WorldSpaceAABB()
+			local diff = max-min
+			realboxesp(min, max, diff, v)
+			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+			draw.DrawText("[NPC]" ..v:GetClass(), "Default", pos.x, pos.y-10, Color(255,0,0,255), 1)
+			draw.DrawText("[NPC]" ..v:GetClass(), "Default", 100, 100, Color(255,0,0,255), 1)
+		end
 	end
 	for k,v in pairs(espplys) do
-		local min, max = v:WorldSpaceAABB()
-		local diff = max-min
-		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-		realboxesp(min, max, diff, v)
-		draw.DrawText(v:GetName(), "Default", pos.x, pos.y-10, Color(255,255,0,255), 1)
+		if v:IsValid() then
+			local min, max = v:WorldSpaceAABB()
+			local diff = max-min
+			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+			realboxesp(min, max, diff, v)
+			draw.DrawText(v:GetName(), "Default", pos.x, pos.y-10, Color(255,255,0,255), 1)
+		end
 	end
 	for k,v in pairs(espadmins) do
-		if v then
+		if v:IsValid() then
 			local min, max = v:WorldSpaceAABB()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
@@ -204,18 +208,22 @@ local function esp()
 		end
 	end
 	for k,v in pairs(espsa) do
-		local min, max = v:WorldSpaceAABB()
-		local diff = max-min
-		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-		realboxesp(min, max, diff, v)
-		draw.DrawText("[SuperAdmin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,255,255), 1)
+		if v:IsValid() then
+			local min, max = v:WorldSpaceAABB()
+			local diff = max-min
+			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+			realboxesp(min, max, diff, v)
+			draw.DrawText("[SuperAdmin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,255,255), 1)
+		end
 	end
 	for k,v in pairs(espfriends) do
-		local min, max = v:WorldSpaceAABB()
-		local diff = max-min
-		local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-		realboxesp(min, max, diff, v)
-		draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255), 1)
+		if v:IsValid() then
+			local min, max = v:WorldSpaceAABB()
+			local diff = max-min
+			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+			realboxesp(min, max, diff, v)
+			draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255), 1)
+		end
 	end
 end
 
