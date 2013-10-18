@@ -4,7 +4,7 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 
-Lenny = {}
+Lenny = {} -- ohoh global table.... watch out!!!!!
 timer.Simple(.5, function()
 	Lenny.CurVersion = file.Read("LennysVersion.txt", "LUA")
 end)
