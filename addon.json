@@ -1,0 +1,6 @@
+{
+"title" : "Lenny's Scripts 2",
+"type" : "tool",
+"tags" : ["fun","roleplay"],
+"ignore" : ["*.psd", "*.vcproj", "*.svn*", "*.git*"]
+}

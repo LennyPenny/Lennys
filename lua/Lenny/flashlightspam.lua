@@ -14,7 +14,7 @@ local function flashspammer(cmd)
  end
 
 -- preperation
-hook.Remove("CreateMove", "bunnyhop")
+hook.Remove("CreateMove", "flashspam")
 
 if GetConVarNumber("lenny_flashlightspam") == 1 then
 	hook.Add("CreateMove", "flashspam", flashspammer)

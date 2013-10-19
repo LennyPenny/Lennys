@@ -16,7 +16,7 @@ local function VersionCheck()
 				MsgC(Color(255,0,0), "Your version: "..Lenny.CurVersion.."\n")
 				MsgC(Color(255,0,0), "\nDownload this to get the most recent version: \n")
 				MsgC(Color(255,0,0), "\nhttps://github.com/LennyPenny/Lennys/archive/master.zip\n")
-				MsgC(Color(0,0,255), "\nIf you using the Workshop version of this addon or the download isn't available\nplease contact to creator (Lenny. STEAM_0:0:30422103) to update this Addon\n")
+				MsgC(Color(0,0,255), "\nIf you're using the Workshop version of this addon or the download isn't available\nplease contact to creator (Lenny. STEAM_0:0:30422103) to update this Addon\n")
 			end
 		end,
 		function(error)
