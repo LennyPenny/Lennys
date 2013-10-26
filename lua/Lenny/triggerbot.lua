@@ -11,7 +11,7 @@ local function triggerbot(cmd)
 	if LocalPlayer():Alive() then
 		local target = LocalPlayer():GetEyeTrace().Entity
 		if target:IsValid() then
-			if LocalPlayer():GetActiveWeapon():IsValid() then
+			if IsValid(LocalPlayer():GetActiveWeapon()) then
 				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
 					if target:IsPlayer() or target:IsNPC() then
 						cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))

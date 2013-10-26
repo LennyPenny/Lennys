@@ -89,7 +89,7 @@ local espadmins= {}
 local espsa = {}
 local espnpcs = {}
 local espfriends = {}
-
+local esp
 --same reason as in the wh
 timer.Create("espentrefresh", 1, 0, function()
 	espplys = {}
@@ -97,6 +97,9 @@ timer.Create("espentrefresh", 1, 0, function()
 	espsa = {}
 	espnpcs = {}
 	espfriends = {}
+
+	espents = {}
+
 	if espradius != 0 then
 		for k, v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), espradius)) do
 			if (v:IsPlayer() and !(LocalPlayer() == v)) then
@@ -113,6 +116,8 @@ timer.Create("espentrefresh", 1, 0, function()
 				end
 			elseif v:IsNPC() then
 				table.insert(espnpcs, v)
+			elseif string.find(v:GetClass(), "weapon") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") then
+				table.insert(espents, v)
 			end
 		end
 	else
@@ -131,6 +136,8 @@ timer.Create("espentrefresh", 1, 0, function()
 				end
 			elseif v:IsNPC() then
 				table.insert(espnpcs, v)
+			elseif string.find(v:GetClass(), "spawned_weapon") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") then
+				table.insert(espents, v)
 			end
 		end
 	end
@@ -223,6 +230,15 @@ local function esp()
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
 			draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255), 1)
+		end
+	end
+	for k, v in pairs(espents) do
+		if v:IsValid() then
+			local min, max = v:WorldSpaceAABB()
+			local diff = max-min
+			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+			realboxesp(min, max, diff, v)
+			draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,255,255), 1)
 		end
 	end
 end
