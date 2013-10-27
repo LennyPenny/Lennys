@@ -253,7 +253,7 @@ end
 
 
 cvars.AddChangeCallback("lenny_esp_radius", function() 
-	radius = GetConVarNumber("lenny_esp_radius")
+	espradius = GetConVarNumber("lenny_esp_radius")
 end)
 
 cvars.AddChangeCallback("lenny_esp", function() 
