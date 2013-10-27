@@ -24,7 +24,7 @@ for i = 1000, 9999 do
 	table.insert(pintable, i)	
 end
 
-local function bruteforce( ply, cmd, args )
+local function bruteforceall( ply, cmd, args )
 	for k, v in pairs(player.GetAll()) do
 		for _, pin in pairs(pintable) do
 			RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[1])
@@ -38,7 +38,7 @@ local function bruteforce( ply, cmd , args )
 	for k, v in pairs(player.GetAll()) do
 		if string.lower(v:Name()) == args[1] then
 			for _, pin in pairs(pintable) do
-			RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), args[1]:UniqueID(), args[2])
+				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), args[1]:UniqueID(), args[2])
 			end
 		end
 	end
