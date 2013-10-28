@@ -6,6 +6,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 
 CreateClientConVar("lenny_triggerbot", 0)
 
+local toggler = 0
 
 local function triggerbot(cmd)
 	if LocalPlayer():Alive() then
@@ -14,7 +15,13 @@ local function triggerbot(cmd)
 			if IsValid(LocalPlayer():GetActiveWeapon()) then
 				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
 					if target:IsPlayer() or target:IsNPC() then
-						cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
+						if toggler == 0 then
+							cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
+							toggler = 1
+						else
+							cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(IN_ATTACK)))
+							toggler = 0
+						end
 					end	
 				end
 			end

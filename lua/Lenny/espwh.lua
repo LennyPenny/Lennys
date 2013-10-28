@@ -183,7 +183,12 @@ local function realboxesp(min, max, diff, ply)
 	cam.End3D()
 end
 
-
+local espplys = {}
+local espadmins= {}
+local espsa = {}
+local espnpcs = {}
+local espfriends = {}
+local esp
 local function esp()
 	--text esp
 	for k, v in pairs(espnpcs) do

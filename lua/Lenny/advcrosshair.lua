@@ -14,10 +14,8 @@ local function advcrosshair()
 		if target:IsPlayer() or target:IsNPC() then
 			surface.SetDrawColor(Color(255,255,255))
 
-			surface.DrawLine(mx-10, my+10, mx-5, my+5)
-			surface.DrawLine(mx-10, my-10, mx-5, my-5)
-			surface.DrawLine(mx+10, my+10, mx+5, my+5)
-			surface.DrawLine(mx+10, my-10, mx+5, my-5)
+			surface.DrawLine(mx-5, my+5, mx+5, my-5)
+			surface.DrawLine(mx-5, my-5, mx+5, my+5)
 
 			draw.DrawText("Health: "..target:Health(), "Default", mx, my+20, Color(255,255,0), 1)
 
@@ -28,8 +26,10 @@ local function advcrosshair()
 					draw.DrawText("Shots to kill: "..math.ceil(target:Health()/LocalPlayer():GetActiveWeapon().Primary.Damage), "Default", mx, my+30, Color(0,255,255), 1)
 
 					if LocalPlayer():KeyDown(IN_ATTACK)  then
-						surface.DrawLine(mx-5, my+5, mx+5, my-5)
-						surface.DrawLine(mx-5, my-5, mx+5, my+5)
+						surface.DrawLine(mx-10, my+10, mx-5, my+5)
+						surface.DrawLine(mx-10, my-10, mx-5, my-5)
+							surface.DrawLine(mx+10, my+10, mx+5, my+5)
+					surface.DrawLine(mx+10, my-10, mx+5, my-5)
 					end
 				end
 			end

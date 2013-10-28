@@ -3,7 +3,7 @@ Don't use this.
 I just used the shitty aimbot from the old wiki and ported it to the CreateMove hook to make it faster, also added some nice tweaks. Credit goes to whoever made this. (If you know who it was, tell me: STEAM_0:0:30422103)
 ]]
 
-CreateClientConVar("lenny_aim", 0)
+CreateClientConVar("lenny_autosnaptohead", 0)
 
 local function shitaimbad(cmd)
 	local target = LocalPlayer():GetEyeTrace().Entity
@@ -27,13 +27,13 @@ end
 -- prepping
 hook.Remove("CreateMove", "shitaimbad")
 
-if GetConVarNumber("lenny_aim") == 1 then
+if GetConVarNumber("lenny_autosnaptohead") == 1 then
 	hook.Add("CreateMove", "shitaimbad", shitaimbad)
 end
 --end of prep
 
-cvars.AddChangeCallback("lenny_aim", function() 
-	if GetConVarNumber("lenny_aim") == 1 then
+cvars.AddChangeCallback("lenny_autosnaptohead", function() 
+	if GetConVarNumber("lenny_autosnaptohead") == 1 then
 		hook.Add("CreateMove", "shitaimbad", shitaimbad)
 	else
 		hook.Remove("CreateMove", "shitaimbad")
