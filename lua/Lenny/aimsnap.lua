@@ -9,8 +9,7 @@ local midx = ScrW()*.5
 local midy = ScrH()*.5
 
 
-local hatpos
-local hatang
+
 
 local function sorter(v1, v2)
 	if v1[3] < v2[3] then
@@ -27,7 +26,7 @@ local function aimsnap()
 			if v != LocalPlayer() then
 				local hat = v:LookupBone("ValveBiped.Bip01_Head1")
 				if hat then
-					hatpos, hatang = v:GetBonePosition(hat)
+					local hatpos, hatang = v:GetBonePosition(hat)
 					local scrpos = hatpos:ToScreen()
 
 					if scrpos.visible then
