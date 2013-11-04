@@ -6,15 +6,16 @@ Credit to the author must be given when using/sharing this work or derivative wo
 -- thanks to vexx21322 for help with the bitwise arithmetics
 
 CreateClientConVar("lenny_bhop", 0)
+CreateClientConVar("lenny_bhophelper", 1)
 
 
 local function bhopper( cmd )
-	if input.IsKeyDown(KEY_SPACE) then
-		if LocalPlayer():IsOnGround() then
-			cmd:SetButtons(cmd:GetButtons())
-		else
-			cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(IN_JUMP)))
+	if cmd:KeyDown(IN_JUMP) then
+		local buttonsetter = cmd:GetButtons()
+		if !LocalPlayer():IsOnGround() then
+			buttonsetter = bit.band(buttonsetter, bit.bnot(IN_JUMP))
 		end
+		cmd:SetButtons(buttonsetter)
 	end
 end
 

@@ -10,7 +10,6 @@ local midy = ScrH()*.5
 
 
 
-
 local function sorter(v1, v2)
 	if v1[3] < v2[3] then
 		return true

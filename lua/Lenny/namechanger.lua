@@ -5,7 +5,14 @@ Credit to the author must be given when using/sharing this work or derivative wo
 Thanks to oubielette
 ]]
 
+local blacklist = {
+	"admin",
+	"owner"
+}
 
+
+
+curname = string.Explode(" ", LocalPlayer():Name())
 local function namechange()
 	local parts = {}
 	local name = ""
@@ -26,7 +33,27 @@ local function namechange()
 		end
 	end
 	if string.len(name) < 30 then
-		LocalPlayer():ConCommand("say /name".. name)
+		local broke = 0
+		for k, v in pairs(curname) do
+			if string.find(name, v) then
+				namechange()
+				broke = 1
+				break
+			end
+		end
+		if broke == 0 then
+			for k, v in pairs(blacklist) do 
+				if string.find(string.lower(name), string.lower(v)) then
+					namechange()
+					broke = 1
+					break
+				end
+			end
+			if broke == 0 then
+				LocalPlayer():ConCommand("say /name".. name)
+				timer.Simple(.5, function() curname = string.Explode(" ", LocalPlayer():Name()) end)
+			end
+		end
 	else
 		namechange()
 	end

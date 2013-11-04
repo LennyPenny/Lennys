@@ -44,7 +44,8 @@ local function bruteforceply( ply, cmd , args )
 	for k, v in pairs(player.GetAll()) do
 		if string.find(string.lower(v:Name()), string.lower(args[1])) then
 			for _, pin in pairs(pintable) do
-				timer.Simple(tonumber(pin)*.015, function()
+				timer.Simple(tonumber(pin)*.01, function()
+				MsgC(Color(0,255,0), "\nChecking: "..pin.."\n")
 				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[2])
 				end)
 			end

@@ -4,6 +4,8 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 
+CreateClientConVar("lenny_stopfalldmg_prop",  "models/props_c17/oildrum001.mdl")
+
 local toggler = 0
 local ang
 local view = {}
@@ -28,7 +30,7 @@ local function falldamage()
 		if trace.HitWorld then
 			if LocalPlayer():GetPos():Distance(trace.HitPos) < 25 then
 				hook.Remove("CreateMove", "anti-falldmg")
-				RunConsoleCommand("gm_spawn", "models/props_c17/oildrum001.mdl")
+				RunConsoleCommand("gm_spawn", GetConVarString("lenny_stopfalldmg_prop"))
 				cmd:SetViewAngles(view.angles)
 				hook.Remove("CalcView", "FlyCam")
 				toggler = 0

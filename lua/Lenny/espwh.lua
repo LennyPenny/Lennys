@@ -90,6 +90,8 @@ local espsa = {}
 local espnpcs = {}
 local espfriends = {}
 local esp
+
+local espents = {}
 --same reason as in the wh
 timer.Create("espentrefresh", 1, 0, function()
 	espplys = {}
@@ -183,12 +185,6 @@ local function realboxesp(min, max, diff, ply)
 	cam.End3D()
 end
 
-local espplys = {}
-local espadmins= {}
-local espsa = {}
-local espnpcs = {}
-local espfriends = {}
-local esp
 local function esp()
 	--text esp
 	for k, v in pairs(espnpcs) do
@@ -237,13 +233,15 @@ local function esp()
 			draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255), 1)
 		end
 	end
-	for k, v in pairs(espents) do
-		if v:IsValid() then
-			local min, max = v:WorldSpaceAABB()
-			local diff = max-min
-			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-			realboxesp(min, max, diff, v)
-			draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,255,255), 1)
+	if espents then
+		for k, v in pairs(espents) do
+			if v:IsValid() then
+				local min, max = v:WorldSpaceAABB()
+				local diff = max-min
+				local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+				realboxesp(min, max, diff, v)
+				draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,255,255), 1)
+			end
 		end
 	end
 end
