@@ -5,7 +5,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 
 Lenny = {} -- ohoh global table.... watch out!!!!!
-timer.Simple(.5, function()
+timer.Simple(.1, function()
 	Lenny.CurVersion = file.Read("LennysVersion.txt", "LUA")
 end)
 

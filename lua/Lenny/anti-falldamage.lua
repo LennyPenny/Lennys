@@ -4,7 +4,7 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 
-CreateClientConVar("lenny_stopfalldmg_prop",  "models/props_c17/oildrum001.mdl")
+CreateClientConVar("lenny_stopfalldmg_prop",  "models/props_trainstation/trainstation_post001.mdl")
 
 local toggler = 0
 local ang

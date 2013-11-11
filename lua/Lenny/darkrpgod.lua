@@ -8,7 +8,7 @@ Thanks to oubielette
 CreateClientConVar("lenny_darkrpgod", 0)
 
 local function darkrpgod()
-	if LocalPlayer():Health < 75 then
+	if LocalPlayer():Health() < 75 then
 		LocalPlayer():ConCommand("say /buyhealth")
 	end
 end

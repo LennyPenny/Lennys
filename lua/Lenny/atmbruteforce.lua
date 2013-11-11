@@ -5,7 +5,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 Thanks to Meepdarkeness for reducement of packet loss
 ]]
 
-
+local breake = 0
 
 
 local function bruteforce()
@@ -34,6 +34,10 @@ local function bruteforceall( ply, cmd, args )
 		for _, pin in pairs(pintable) do
 			timer.Simple(tonumber(pin)*.015, function() --thx meepdarkness, keep in mind that multiplication is faster than divison
 			RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[1])
+			if breake == 1 then
+				breake = 0
+				return
+			end
 			end)
 		end
 	end
@@ -47,6 +51,10 @@ local function bruteforceply( ply, cmd , args )
 				timer.Simple(tonumber(pin)*.01, function()
 				MsgC(Color(0,255,0), "\nChecking: "..pin.."\n")
 				RunConsoleCommand("rp_atm_withdraw", util.CRC(pin), v:UniqueID(), args[2])
+				if breake == 1 then
+					breake = 0
+					return
+				end
 				end)
 			end
 		end
@@ -56,6 +64,7 @@ end
 concommand.Add("lenny_atmbruteforce_all", bruteforceall) --put amount to withdraw as an argument
 
 concommand.Add("lenny_atmbruteforce_ply", bruteforceply) -- put name, then amount to withdraw as arguments
+
 
 MsgC(Color(0,255,0), "\nInitialzed!!\n")
 

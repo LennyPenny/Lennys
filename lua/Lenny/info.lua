@@ -72,7 +72,7 @@ local function info()
 	MsgC(Color(0,255,0), "	by Lenny aka LennyPenny (STEAM_0:0:30422103)\n")
 
 	MsgC(Color(255,255,0), "\n	Source: www.GitHub.com/LennyPenny/Lennys\n")
-	MsgC(Color(0,255,255), "	Workshop: to be uploaded\n")
+	MsgC(Color(0,255,255), "	Workshop: www.SteamCommunity.com/sharedfiles/filedetails/?id=186936307\n")
 
 
 
@@ -82,5 +82,6 @@ end
 
 concommand.Add("lenny_info", info)
 
+timer.Simple(.5, info)
 
 MsgC(Color(0,255,0), "\nLennys MOTD initialized!\n")
