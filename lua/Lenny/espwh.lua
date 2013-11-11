@@ -1,5 +1,6 @@
 --[[
 Lennys Scripts by Lenny. (STEAM_0:0:30422103)
+Modified and improved by Ott (STEAM_0:0:36527860)
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
@@ -118,8 +119,10 @@ timer.Create("espentrefresh", 1, 0, function()
 				end
 			elseif v:IsNPC() then
 				table.insert(espnpcs, v)
-			elseif string.find(v:GetClass(), "weapon") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") then
-				table.insert(espents, v)
+			elseif string.find(v:GetClass(), "weapon") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") or string.find(v:GetClass(), "money") or string.find(v:GetClass(), "durgz") then
+				if not string.find(v:GetClass(), "phys") then
+					table.insert(espents, v)
+				end
 			end
 		end
 	else
@@ -138,8 +141,10 @@ timer.Create("espentrefresh", 1, 0, function()
 				end
 			elseif v:IsNPC() then
 				table.insert(espnpcs, v)
-			elseif string.find(v:GetClass(), "spawned_weapon") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") then
-				table.insert(espents, v)
+			elseif string.find(v:GetClass(), "spawned_weapon") or string.find(v:GetClass(), "info_player") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") or string.find(v:GetClass(), "money") or string.find(v:GetClass(), "durgz") or string.find(v:GetClass(), "seed") then
+				if not string.find(v:GetClass(), "phys") then
+					table.insert(espents, v)
+				end
 			end
 		end
 	end
@@ -193,8 +198,7 @@ local function esp()
 			local diff = max-min
 			realboxesp(min, max, diff, v)
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-			draw.DrawText("[NPC]" ..v:GetClass(), "Default", pos.x, pos.y-10, Color(255,0,0,255), 1)
-			draw.DrawText("[NPC]" ..v:GetClass(), "Default", 100, 100, Color(255,0,0,255), 1)
+			draw.DrawText("[NPC]" ..v:GetClass(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
 		end
 	end
 	for k,v in pairs(espplys) do
@@ -203,7 +207,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText(v:GetName(), "Default", pos.x, pos.y-10, Color(255,255,0,255), 1)
+			draw.DrawText(v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(255, 255,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
 		end
 	end
 	for k,v in pairs(espadmins) do
@@ -212,7 +216,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText("[Admin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,0,255), 1)
+			draw.DrawText("[Admin]"..v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
 		end
 	end
 	for k,v in pairs(espsa) do
@@ -221,7 +225,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText("[SuperAdmin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,255,255), 1)
+			draw.DrawText("[SuperAdmin]"..v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(255,0,255,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
 		end
 	end
 	for k,v in pairs(espfriends) do
@@ -230,7 +234,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255), 1)
+			draw.DrawText("[Friend]"..v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(0,255,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
 		end
 	end
 	if espents then
@@ -240,7 +244,7 @@ local function esp()
 				local diff = max-min
 				local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 				realboxesp(min, max, diff, v)
-				draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,255,255), 1)
+				draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,255,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
 			end
 		end
 	end
