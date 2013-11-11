@@ -1,10 +1,11 @@
 --[[
 Lennys Scripts by Lenny. (STEAM_0:0:30422103)
+Modified and improved by Ott (STEAM_0:0:36527860)
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 CreateClientConVar("lenny_aimsnap", 0)
-
+local ignoreblocked = CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
 local midx = ScrW()*.5
 local midy = ScrH()*.5
 
@@ -20,16 +21,26 @@ end
 local function aimsnap()
 	disfromaim = {}
 	surface.SetDrawColor(Color(255,255,255))
-	for k, v in pairs(ents.GetAll()) do
-		if v:IsPlayer() or v:IsNPC() then
-			if v != LocalPlayer() then
+	for k, v in pairs(player.GetAll()) do
+		if v != LocalPlayer() and v:Alive() then
+			if v:GetFriendStatus() != "friend" then
 				local hat = v:LookupBone("ValveBiped.Bip01_Head1")
 				if hat then
 					local hatpos, hatang = v:GetBonePosition(hat)
 					local scrpos = hatpos:ToScreen()
-
+					local tracedat = {}
+					tracedat.start = LocalPlayer():GetShootPos()
+					tracedat.endpos = hatpos
+					tracedat.mask = CONTENTS_SOLID + CONTENTS_MOVEABLE + CONTENTS_OPAQUE + CONTENTS_DEBRIS + CONTENTS_HITBOX + CONTENTS_MONSTER
+					local trac = util.TraceLine(tracedat)
 					if scrpos.visible then
-						table.insert(disfromaim, {v,  scrpos, math.Dist(midx,midy, scrpos.x,scrpos.y), hatpos})
+						if ignoreblocked:GetBool() then
+							if trac.Entity == NULL then
+								table.insert(disfromaim, {v,  scrpos, math.Dist(midx,midy, scrpos.x,scrpos.y), hatpos})
+							end
+						else
+							table.insert(disfromaim, {v,  scrpos, math.Dist(midx,midy, scrpos.x,scrpos.y), hatpos})
+						end
 					end
 				end
 			end
