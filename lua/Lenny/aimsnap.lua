@@ -35,7 +35,7 @@ local function aimsnap()
 					local trac = util.TraceLine(tracedat)
 					if scrpos.visible then
 						if ignoreblocked:GetBool() then
-							if trac.Entity == NULL then
+							if trac.Entity == NULL or trac.Entity == v then
 								table.insert(disfromaim, {v,  scrpos, math.Dist(midx,midy, scrpos.x,scrpos.y), hatpos})
 							end
 						else
