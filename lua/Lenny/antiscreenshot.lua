@@ -5,8 +5,8 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 
-local missingjpg = file.Read("Lenny/missing256.jpg", "LUA")
-local missingpng = file.Read("Lenny/missing256.png", "LUA")
+local missingjpg = file.Read("materials/missing256.jpg", "GAME")
+local missingpng = file.Read("materials/missing256.png", "GAME")
 
 /*
 ###############
