@@ -9,6 +9,7 @@ CreateClientConVar("lenny_aimsnap_fov", 500)
 
 local ignoreblocked = CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
 
+local FOV = GetConVarNumber("lenny_aimsnap_fov")
 
 local midx = ScrW()*.5
 local midy = ScrH()*.5
@@ -24,7 +25,7 @@ end
 local disfromaim = {}
 
 local function isinfov(dist)
-	if dist <= GetConVarNumber("lenny_aimsnap_fov") then
+	if dist <= FOV then
 		return true
 	else
 		return false
@@ -121,6 +122,11 @@ cvars.AddChangeCallback("lenny_aimsnap", function()
 		hook.Remove("HUDPaint", "aimsnap")
 	end
 end)
+
+cvars.AddChangeCallback("lenny_aimsnap_fov", function() 
+	FOV = GetConVarNumber("lenny_aimsnap_fov")
+end)
+
 
 
 MsgC(Color(0,255,0), "\nLennys AimSnap initialized!\n")
