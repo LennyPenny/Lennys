@@ -190,6 +190,16 @@ local function realboxesp(min, max, diff, ply)
 	cam.End3D()
 end
 
+
+local function calctextopactity(dis)
+	if espradius != 0 then
+		return (dis / espradius) * 255
+	else
+		return 0
+	end
+end
+
+
 local function esp()
 	--text esp
 	for k, v in pairs(espnpcs) do
@@ -198,7 +208,7 @@ local function esp()
 			local diff = max-min
 			realboxesp(min, max, diff, v)
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-			draw.DrawText("[NPC]" ..v:GetClass(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
+			draw.DrawText("[NPC]" ..v:GetClass(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
 	for k,v in pairs(espplys) do
@@ -207,7 +217,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText(v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(255, 255,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
+			draw.DrawText(v:GetName(), "Default", pos.x, pos.y-10, Color(255, 255,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
 	for k,v in pairs(espadmins) do
@@ -216,7 +226,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText("[Admin]"..v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
+			draw.DrawText("[Admin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
 	for k,v in pairs(espsa) do
@@ -225,7 +235,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText("[SuperAdmin]"..v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(255,0,255,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
+			draw.DrawText("[SuperAdmin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,255,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
 	for k,v in pairs(espfriends) do
@@ -234,7 +244,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			draw.DrawText("[Friend]"..v:GetName() .. "\n" .. team.GetName(v:Team()) .. "\nHP: " .. v:Health(), "Default", pos.x, pos.y-10, Color(0,255,0,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
+			draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
 	if espents then
@@ -244,7 +254,7 @@ local function esp()
 				local diff = max-min
 				local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 				realboxesp(min, max, diff, v)
-				draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,255,255 - ((v:GetPos():Distance(LocalPlayer():GetPos()) / espradius) * 255)), 1)
+				draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 			end
 		end
 	end
