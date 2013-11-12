@@ -5,7 +5,11 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 CreateClientConVar("lenny_aimsnap", 0)
+CreateClientConVar("lenny_aimsnap_fov", 500)
+
 local ignoreblocked = CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
+
+
 local midx = ScrW()*.5
 local midy = ScrH()*.5
 
@@ -17,7 +21,17 @@ local function sorter(v1, v2)
 	end
 end
 
-	local disfromaim = {}
+local disfromaim = {}
+
+local function isinfov(dist)
+	if dist <= GetConVarNumber("lenny_aimsnap_fov") then
+		return true
+	else
+		return false
+	end
+end
+
+
 local function aimsnap()
 	disfromaim = {}
 	surface.SetDrawColor(Color(255,255,255))
@@ -34,12 +48,17 @@ local function aimsnap()
 					tracedat.mask = CONTENTS_SOLID + CONTENTS_MOVEABLE + CONTENTS_OPAQUE + CONTENTS_DEBRIS + CONTENTS_HITBOX + CONTENTS_MONSTER
 					local trac = util.TraceLine(tracedat)
 					if scrpos.visible then
+						local distocenter = math.Dist(midx,midy, scrpos.x,scrpos.y)
 						if ignoreblocked:GetBool() then
 							if trac.Entity == NULL or trac.Entity == v then
-								table.insert(disfromaim, {v,  scrpos, math.Dist(midx,midy, scrpos.x,scrpos.y), hatpos})
+								if isinfov(distocenter) then
+									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos})
+								end
 							end
 						else
-							table.insert(disfromaim, {v,  scrpos, math.Dist(midx,midy, scrpos.x,scrpos.y), hatpos})
+							if isninfov(disfromcenter) then
+								table.insert(disfromaim, {v,  scrpos, distocenter, hatpos})
+							end
 						end
 					end
 				end
