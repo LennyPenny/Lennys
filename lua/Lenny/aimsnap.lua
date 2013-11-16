@@ -6,8 +6,8 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 CreateClientConVar("lenny_aimsnap", 0)
 CreateClientConVar("lenny_aimsnap_fov", 500)
-
-local ignoreblocked = CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
+CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
+CreateClientConVar("lenny_aimsnap_prioritize", 0)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
 
@@ -17,8 +17,18 @@ local midy = ScrH()*.5
 
 
 local function sorter(v1, v2)
-	if v1[3] < v2[3] then
-		return true
+	if GetConVarNumber("lenny_aimsnap_prioritize") == 1 then
+		if v1[5] > v2[5] then
+			return true
+		elseif v1[5] == v2[5] then
+			if v1[3] < v2[3] then
+				return true
+			end
+		end
+	else
+		if v1[3] < v2[3] then
+			return true
+		end
 	end
 end
 
@@ -46,19 +56,26 @@ local function aimsnap()
 					local tracedat = {}
 					tracedat.start = LocalPlayer():GetShootPos()
 					tracedat.endpos = hatpos
-					tracedat.mask = CONTENTS_SOLID + CONTENTS_MOVEABLE + CONTENTS_OPAQUE + CONTENTS_DEBRIS + CONTENTS_HITBOX + CONTENTS_MONSTER
+					tracedat.mask = MASK_SHOT
 					local trac = util.TraceLine(tracedat)
 					if scrpos.visible then
+						local dmg = 0
+						if v:GetActiveWeapon():IsValid() then
+							if v:GetActiveWeapon():Clip1() > 0 then
+								dmg = v:GetActiveWeapon().Primary.Damage
+							end
+						end
+						local dmg = dmg or 0
 						local distocenter = math.Dist(midx,midy, scrpos.x,scrpos.y)
-						if ignoreblocked:GetBool() then
+						if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
 							if trac.Entity == NULL or trac.Entity == v then
 								if isinfov(distocenter) then
-									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos})
+									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
 								end
 							end
 						else
-							if isninfov(disfromcenter) then
-								table.insert(disfromaim, {v,  scrpos, distocenter, hatpos})
+							if isinfov(distocenter) then
+								table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
 							end
 						end
 					end
