@@ -265,6 +265,9 @@ local function esp()
 				realboxesp(min, max, diff, v)
 				drawesptext(v:GetClass(), pos.x, pos.y-10, Color(0 ,255, 0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))))
 				--draw.DrawText(v:GetClass(), "Default", pos.x, pos.y-10, Color(0,255,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
+				if v:GetClass() == "spawned_money" then
+					drawesptext("$"..v:Getamount(), pos.x, pos.y, Color(0 ,255, 255,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))))
+				end
 			end
 		end
 	end
