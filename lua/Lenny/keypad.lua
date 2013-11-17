@@ -6,8 +6,8 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 
 
-CreateClientConVar("lenny_keypad", "0")
-CreateClientConVar("lenny_keypad_radius", 200)
+CreateClientConVar("lenny_keypad", 0)
+CreateClientConVar("lenny_keypad_radius", 500)
 local keypadradius = GetConVarNumber("lenny_keypad_radius")
 local X = -50
 local Y = -100
@@ -112,7 +112,7 @@ local function realboxkeypad(min, max, diff, clr)
 end
 
 local function drawstuff()
-	for k,v in pairs(ents.GetAll()) do
+	for k,v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), keypadradius) do
 		if IsValid(v) then
 			if string.find(v:GetClass(), "keypad") and not string.find(v:GetClass(), "check") and not string.find(v:GetClass(), "crack") then
 				if v != e then
