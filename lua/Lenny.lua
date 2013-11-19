@@ -19,3 +19,5 @@ for k, v in pairs(files) do
 	include("Lenny/" .. v)
 end
 MsgC(Color(0,255,255), "\nAll of Lennys scripts initialized!\n\n")
+
+timer.Simple(.3, function() RunConsoleCommand("lenny_menu") end)
