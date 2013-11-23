@@ -14,7 +14,7 @@ local function lennymenu()
 	frame:SetSize(w - 150, h - 150)
 	frame:Center()
 	frame:MakePopup()
-	frame:ShowCloseButton(false)
+	--frame:ShowCloseButton(false)
 
 	local fw, fh = frame:GetWide(), frame:GetTall()
 
