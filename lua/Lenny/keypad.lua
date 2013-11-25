@@ -112,7 +112,7 @@ local function realboxkeypad(min, max, diff, clr)
 end
 
 local function drawstuff()
-	for k,v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), keypadradius) do
+	for k,v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), keypadradius)) do
 		if IsValid(v) then
 			if string.find(v:GetClass(), "keypad") and not string.find(v:GetClass(), "check") and not string.find(v:GetClass(), "crack") then
 				if v != e then
