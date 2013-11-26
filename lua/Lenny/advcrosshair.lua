@@ -4,25 +4,35 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 CreateClientConVar("lenny_advcrosshair", 0)
-
+CreateClientConVar("lenny_advcrosshair_money", 0) -- Show Money on Adv Crosshair
 local mx = ScrW()*.5 --middle x
 local my = ScrH()*.5  --middle y
 
+
 local function advcrosshair()
+
 	if LocalPlayer():Health() > 0 then
 		local target = LocalPlayer():GetEyeTrace().Entity
 		if target:IsPlayer() or target:IsNPC() then
+			if GetConVarNumber("lenny_advcrosshair_money") == 1 and target.DarkRPVars.money then
+			local dosh = target.DarkRPVars.money
+			if not dosh then dosh = "" end
+			end
 			surface.SetDrawColor(Color(255,255,255))
 
 			surface.DrawLine(mx-5, my+5, mx+5, my-5)
 			surface.DrawLine(mx-5, my-5, mx+5, my+5)
 
 			draw.DrawText("Health: "..target:Health(), "Default", mx, my+20, Color(255,255,0), 1)
-
+			if GetConVarNumber("lenny_advcrosshair_money") == 1 and dosh and LocalPlayer():GetActiveWeapon():Clip1() < 1 then
+			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+30, Color(0,255,255), 1)
+			elseif  GetConVarNumber("lenny_advcrosshair_money") == 1 and dosh and LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+40, Color(0,255,255), 1)
+			end
 			surface.SetDrawColor(Color(255,0,0))
 			if LocalPlayer():GetActiveWeapon():IsValid() then
 				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
-
+				
 					draw.DrawText("Shots to kill: "..math.ceil(target:Health()/LocalPlayer():GetActiveWeapon().Primary.Damage), "Default", mx, my+30, Color(0,255,255), 1)
 
 					if LocalPlayer():KeyDown(IN_ATTACK)  then
@@ -43,6 +53,7 @@ local function advcrosshair()
 	surface.DrawLine(mx, my-35, mx, my-20)
 	surface.DrawLine(mx, my+35, mx, my+20)
 end
+
 
 
 -- prepping
