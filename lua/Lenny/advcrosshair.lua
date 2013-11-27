@@ -18,18 +18,18 @@ local function advcrosshair()
 			surface.DrawLine(mx-5, my-5, mx+5, my+5)
 
 			draw.DrawText("Health: "..target:Health(), "Default", mx, my+20, Color(255,255,0), 1)
-		if GetConVarNumber("lenny_advcrosshair_money") == 1 and target.DarkRPVars.money then
+			if GetConVarNumber("lenny_advcrosshair_money") == 1 and target.DarkRPVars then
 
 			local dosh = target.DarkRPVars.money
-	        	if not dosh then dosh = "" end
-			--[[This following part is to check if the player is holding the gun out; If they are then it should draw it below "Shots to Kill"]--
-			if LocalPlayer():GetActiveWeapon():Clip1() < 1 then
-				draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+30, Color(0,255,255), 1)
+			if not dosh then dosh = "" end
+		
+			if LocalPlayer():GetActiveWeapon():Clip1() < 1  then -- Check if they are holding a gun(Where to draw money)
+			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+30, Color(0,255,255), 1)
 			else
-				draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+40, Color(0,255,255), 1)
+			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+40, Color(0,255,255), 1)
 			end
-			
-		end
+		
+			end
 		
 			surface.SetDrawColor(Color(255,0,0))
 			if LocalPlayer():GetActiveWeapon():IsValid() then
