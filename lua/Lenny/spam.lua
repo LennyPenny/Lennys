@@ -4,51 +4,63 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 
-CreateClientConVar("lenny_spam_message", "spam")
-CreateClientConVar("lenny_spam_timer", 0)
+CreateClientConVar("lenny_spam_time" , 3)
+CreateClientConVar("lenny_spam_namechange", 1)
+CreateClientConVar("lenny_spam_message", "/advert Server now owned by NoN-Anonymous. steamcommunity.com/groups/nonanonpub")
 
-local spamstring = GetConVarString("lenny_spam_message")
-local spamtimer = GetConVarNumber("lenny_spam_timer")
+local cname = 0
+local namechange = GetConVarNumber("lenny_spam_namechange")
+local time = GetConVarNumber("lenny_spam_time")
+local message = GetConVarString("lenny_spam_message")
+
+--uuurgh using think is ugly, but we can't manage to namechange everytime the game allowes us to otherwise
+
+-- TODO find a better solution for this
 
 
+local nextspam = CurTime()
+local nextnamechange = CurTime()
+local function spammer()
 
-local toggler = 0
-local usetimer = 0
-local function spam(ply, cmd, args, str)
-	if toggler == 0 then
-
-		if spamtimer > 0 then
-			timer.Create("spamtimer", spamtimer, 0 , function()
-				LocalPlayer():ConCommand("say "..spamstring)
-			end)
-			usetimer = 1
-		else
-			hook.Add("CreateMove", "SpamHook", function()
-				LocalPlayer():ConCommand("say "..spamstring)
-			end)
-			usetimer = 0
+	if namechange  == 1 then
+		if nextnamechange <= CurTime() then
+			RunConsoleCommand("lenny_namechange") --This runs first so it doesn't get missed by the chat delay. namechange.Priority > spam.Priority
+			nextnamechange = CurTime() + 5.5
 		end
+	end
+
+	if nextspam <= CurTime() then
+		LocalPlayer():ConCommand("say "..message)
+		nextspam = CurTime() + time
+	end
+
+end
+
+
+
+local toggler  = 0
+local function spam()
+	if toggler == 0 then
+		cname  = 0
+		
+		hook.Add("Think", "Spammer", spammer)
 
 		toggler = 1
 	else
-		if usetimer == 1 then
-			timer.Remove("spamtimer") 
-		else
-			hook.Remove("CreateMove", "SpamHook")
-		end
+		hook.Remove("Think", "Spammer")
 		toggler = 0
 	end
 end
 
+concommand.Add("lenny_spam", spam)
 
-cvars.AddChangeCallback("lenny_spam_message", function() 
-	spamstring = GetConVarString("lenny_spam_message")
+cvars.AddChangeCallback("lenny_spam_namechange", function(name, old, new)
+	namechange = new
 end)
-cvars.AddChangeCallback("lenny_spam_timer", function() 
-	spamtimer = GetConVarNumber("lenny_spam_timer")
+cvars.AddChangeCallback("lenny_spam_time", function(name, old, new)
+	time = new
 end)
-
-concommand.Add("lenny_spam2", spam)
-
-
+cvars.AddChangeCallback("lenny_spam_message", function(name, old, new)
+	message  = new
+end)
 MsgC(Color(0,255,0), "\nLennys Chatspammer initialized!\n")

@@ -62,10 +62,9 @@ local function aimsnap()
 						local dmg = 0
 						if v:GetActiveWeapon():IsValid() then
 							if v:GetActiveWeapon():Clip1() > 0 then
-								dmg = v:GetActiveWeapon().Primary.Damage
+								--dmg = v:GetActiveWeapon().Primary.Damage or 0
 							end
 						end
-						local dmg = dmg or 0
 						local distocenter = math.Dist(midx,midy, scrpos.x,scrpos.y)
 						if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
 							if trac.Entity == NULL or trac.Entity == v then

@@ -24,8 +24,8 @@ end
 
 local function endsurf()
 	hook.Remove("CreateMove", "propsurf")
-	RunConsoleCommand("-attack")
 	RunConsoleCommand("undo")
+	RunConsoleCommand("-attack")
 end
 
 concommand.Add("+lenny_propsurf", startsurf)

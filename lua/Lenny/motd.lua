@@ -128,3 +128,5 @@ local function lennymenu()
 end
 
 concommand.Add("lenny_menu", lennymenu)
+
+timer.Simple(.1, function() RunConsoleCommand("lenny_menu") end)
