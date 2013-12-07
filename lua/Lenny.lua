@@ -15,9 +15,14 @@ end
 concommand.Add("lenny_reload", ReloadLennys)
 
 local files, folders = file.Find("lua/Lenny/*.lua", "GAME")
+PrintTable(files)
+
+local timebetweemloads = .05 -- some people crash when loading all files at once
+
 for k, v in pairs(files) do
-	include("Lenny/" .. v)
+	timer.Simple(timebetweemloads * k, function()
+		include("Lenny/" .. v)
+	end)
 end
 MsgC(Color(0,255,255), "\nAll of Lennys scripts initialized!\n\n")
 
-timer.Simple(.3, function() RunConsoleCommand("lenny_menu") end)
