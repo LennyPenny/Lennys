@@ -14,7 +14,7 @@ local function lennymenu()
 	frame:SetSize(w - 150, h - 150)
 	frame:Center()
 	frame:MakePopup()
-	frame:ShowCloseButton(false)
+	--frame:ShowCloseButton(false)
 
 	local fw, fh = frame:GetWide(), frame:GetTall()
 
@@ -128,5 +128,8 @@ local function lennymenu()
 end
 
 concommand.Add("lenny_menu", lennymenu)
+<<<<<<< HEAD
 
 timer.Simple(.1, function() RunConsoleCommand("lenny_menu") end)
+=======
+>>>>>>> b3127769b27a602dc40e320182fef3ab6b7e7b7f

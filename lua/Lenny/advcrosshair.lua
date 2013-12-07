@@ -4,7 +4,7 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 CreateClientConVar("lenny_advcrosshair", 0)
-
+CreateClientConVar("lenny_advcrosshair_money", 0)
 local mx = ScrW()*.5 --middle x
 local my = ScrH()*.5  --middle y
 
@@ -18,7 +18,19 @@ local function advcrosshair()
 			surface.DrawLine(mx-5, my-5, mx+5, my+5)
 
 			draw.DrawText("Health: "..target:Health(), "Default", mx, my+20, Color(255,255,0), 1)
+			if GetConVarNumber("lenny_advcrosshair_money") == 1 and target.DarkRPVars then
 
+			local dosh = target.DarkRPVars.money
+			if not dosh then dosh = "" end
+		
+			if LocalPlayer():GetActiveWeapon():Clip1() < 1  then -- Check if they are holding a gun(Where to draw money)
+			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+30, Color(0,255,255), 1)
+			else
+			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+40, Color(0,255,255), 1)
+			end
+		
+			end
+		
 			surface.SetDrawColor(Color(255,0,0))
 			if LocalPlayer():GetActiveWeapon():IsValid() then
 				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then

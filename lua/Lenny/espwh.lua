@@ -82,6 +82,7 @@ end)
 
 CreateClientConVar("lenny_esp_radius", 1500)
 CreateClientConVar("lenny_esp", 0)
+CreateClientConVar("lenny_esp_view", 0) -- Ability to see where the player is looking
 local espradius = GetConVarNumber("lenny_esp_radius")
 
 
@@ -182,9 +183,15 @@ local function realboxesp(min, max, diff, ply)
 		render.DrawLine( min+Vector(diff.x, diff.y,0), min+Vector(diff.x,0,0) , Color(0,255,0) )
 		render.DrawLine( min+Vector(diff.x, diff.y,0), min+Vector(0,diff.y,0) , Color(0,255,0) )
 
-		-- extra
-		--if ply:IsNPC() then return end
-		--render.DrawLine(ply:GetShootPos(), ply:GetEyeTrace().HitPos, Color(255,0,0))
+	
+	if GetConVarNumber("lenny_esp_view") == 1 then
+		local shootpos = ply:IsPlayer() and ply:GetShootPos() or 0
+		local eyetrace = ply:IsPlayer() and ply:GetEyeTrace().HitPos or 0
+
+		if (shootpos != 0 and eyetrace != 0) then
+		render.DrawBeam(shootpos, eyetrace,2,1,1, team.GetColor(ply:Team()))
+		end
+	end
 		
 		
 	cam.End3D()
