@@ -13,13 +13,13 @@ local blacklist = {
 
 local function GenerateName(parts)
 	local name = ""
-		while #name <= 30 and #parts > 0 do
+		while #name <= 20 and #parts > 0 do
 			local num = math.random(1, #parts)
 			local part = parts[num]
 
 			local len = #name + # part
 			
-			if len <= 30 then
+			if len <= 20 then
 				name = name.." "..part
 			end
 			table.remove(parts, num)
