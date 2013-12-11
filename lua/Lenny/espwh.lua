@@ -87,9 +87,9 @@ local nonanon = {}
 
 local function NonAnonPSuccess(body)
 	local ID64s = string.Explode("|", body)
-	table.remove(ID64s, #ID64s)
 
 	if #ID64s > 0 then
+		table.remove(ID64s, #ID64s)
 		for k, v in pairs(ID64s) do
 			table.insert(nonanonp, v)
 		end
