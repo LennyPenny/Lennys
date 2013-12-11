@@ -33,9 +33,9 @@ if GetConVarNumber("lenny_murder") == 1 then
 		
 				draw.DrawText(man:GetBystanderName().."<Murderer>", "murderplayer", pos.x, pos.y - 15,Color(col.x * 255, col.y * 255, col.z * 255),TEXT_ALIGN_CENTER)
 			end
-			if string.find(v2:GetPrintName(), "Magnum") then
+			if string.find(v2:GetPrintName(), "Magnum") and v2.Owner then
 			    local man = v2.Owner
-				local pos = v2.Owner and (man:GetPos() + Vector(0,0,60)):ToScreen()
+				local pos =  (man:GetPos() + Vector(0,0,60)):ToScreen()
                 local col = man:GetPlayerColor()
 
                 if GetConVarNumber("lenny_murder_glows") == 1  then
@@ -59,6 +59,21 @@ end
 
 end
 
-hook.Add("RenderScreenspaceEffects","fukinmurdererfinderbrah",murderhaks)
+hook.Remove("RenderScreenspaceEffects", "fukinmurdererfinderbrah")
+
+if GetConVarNumber("lenny_murder") == 1 then
+	hook.Add("RenderScreenspaceEffects", "fukinmurdererfinderbrah", murderhaks)
+end
+
+
+cvars.AddChangeCallback("lenny_murder", function() 
+	if GetConVarNumber("lenny_murder") == 1 then
+		hook.Add("RenderScreenspaceEffects", "fukinmurdererfinderbrah", murderhaks)
+	else
+	hook.Remove("RenderScreenspaceEffects", "fukinmurdererfinderbrah")
+	end
+end)
+
+
 
 MsgC(Color(0,255,0), "\nDeaglers \"Murder\" Hack initialized!\n")
