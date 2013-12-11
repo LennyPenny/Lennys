@@ -8,9 +8,12 @@ CreateClientConVar("lenny_norecoil", 1)
 
 
 local function norecoil()
-	if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
-		LocalPlayer():GetActiveWeapon().Recoil = 0
-		LocalPlayer():GetActiveWeapon().Primary.Recoil = 0
+	if LocalPlayer():GetActiveWeapon():Clip1() > 0  then
+		if LocalPlayer():GetActiveWeapon().Recoil then
+			LocalPlayer():GetActiveWeapon().Recoil = 0
+		elseif LocalPlayer():GetActiveWeapon().Primary.Recoil then
+			LocalPlayer():GetActiveWeapon().Primary.Recoil = 0
+		end
 	end
 end
 
