@@ -18,7 +18,7 @@ shadow=false
 
 } )
 local function murderhaks()
-if GetConVarNumber("lenny_murder") == 1 then
+
 	for _,v in pairs (player.GetAll()) do
 		for k2, v2 in pairs(v:GetWeapons()) do
 			if string.find(v2:GetPrintName(), "Knife") then
@@ -27,7 +27,7 @@ if GetConVarNumber("lenny_murder") == 1 then
                 local col = man:GetPlayerColor()
 
                 if GetConVarNumber("lenny_murder_glows") == 1 then
-                effects.halo.Add({man}, Color(255,0,0,255), 1, 1, 5, true, true)
+                halo.Add({man}, Color(255,0,0,255), 1, 1, 5, true, true) -- It doesn't matter if you use effects or halo.Add
             	end
 
 		
@@ -39,7 +39,7 @@ if GetConVarNumber("lenny_murder") == 1 then
                 local col = man:GetPlayerColor()
 
                 if GetConVarNumber("lenny_murder_glows") == 1  then
-                effects.halo.Add({man}, Color(0,0,255,255), 1, 1, 5, true, true)
+                halo.Add({man}, Color(0,0,255,255), 1, 1, 5, true, true)
             	end
 
 				draw.DrawText(man:GetBystanderName().."<Gun Holder>", "murderplayer", pos.x, pos.y - 15,Color(col.x * 255, col.y * 255, col.z * 255),TEXT_ALIGN_CENTER)
@@ -52,12 +52,12 @@ if GetConVarNumber("lenny_murder") == 1 then
 			 local pos = ( c:GetPos() + Vector( 0,0,30 ) ):ToScreen()
 			draw.DrawText( "Loot", "default", pos.x, pos.y, Color( 0, 255, 0, 255 ), TEXT_ALIGN_CENTER)
 			if GetConVarNumber("lenny_murder_glows") == 1  then
-			effects.halo.Add({c}, Color(0,255,0), 1, 1, 5, true, true)
+			halo.Add({c}, Color(0,255,0), 1, 1, 5, true, true)
 			end
 		end
 end
 
-end
+
 
 hook.Remove("RenderScreenspaceEffects", "fukinmurdererfinderbrah")
 
