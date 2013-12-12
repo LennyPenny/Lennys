@@ -1,6 +1,7 @@
 --[[
 Lennys Scripts by Lenny. (STEAM_0:0:30422103)
 Modified and improved by Ott (STEAM_0:0:36527860)
+Entity finder+Modifications by Deagler(STEAM_0:1:32634764)
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
@@ -12,11 +13,96 @@ Credit to the author must be given when using/sharing this work or derivative wo
 */
 CreateClientConVar("lenny_wh_radius", 750)
 CreateClientConVar("lenny_wh", 0)
-local radius = GetConVarNumber("lenny_wh_radius")
+CreateClientConVar("lenny_wh_type",0)
 
+local radius = GetConVarNumber("lenny_wh_radius")
+local whtype = GetConVarNumber("lenny_wh_type")
 
 local plys = {}
 local props = {}
+local trackents = { -- Set Default entities here, lenny_ents to add while you're ingame
+"spawned_money",
+"spawned_shipment",
+"spawned_weapon",
+"weapon_ttt_knife",
+"weapon_ttt_c4",
+"npc_tripmine"
+}
+
+
+
+
+
+
+local function entmenu()
+local menu = vgui.Create("DFrame")
+menu:SetSize(500,350)
+menu:MakePopup()
+menu:SetTitle("Entity Finder")
+menu:Center()
+menu:SetKeyBoardInputEnabled()
+
+
+local noton = vgui.Create("DListView",menu)
+noton:SetSize(200,menu:GetTall()-40)
+noton:SetPos(10,30)
+noton:AddColumn("Not Being Tracked")
+
+local on = vgui.Create("DListView",menu)
+on:SetSize(200,menu:GetTall()-40)
+on:SetPos(menu:GetWide()-210,30)
+on:AddColumn("Being Tracked")
+
+local addent = vgui.Create("DButton",menu)
+addent:SetSize(50,25)
+addent:SetPos(menu:GetWide()/2-25,menu:GetTall()/2-20)
+addent:SetText("+")
+addent.DoClick = function() 
+	if noton:GetSelectedLine() != nil then 
+		local ent = noton:GetLine(noton:GetSelectedLine()):GetValue(1)
+		if !table.HasValue(trackents,ent) then 
+			table.insert(trackents,ent)
+			noton:RemoveLine(noton:GetSelectedLine())
+			on:AddLine(ent)
+		end
+	end
+end
+
+local rement = vgui.Create("DButton",menu)
+rement:SetSize(50,25)
+rement:SetPos(menu:GetWide()/2-25,menu:GetTall()/2+20)
+rement:SetText("-")
+rement.DoClick = function()
+	if on:GetSelectedLine() != nil then
+		local ent = on:GetLine(on:GetSelectedLine()):GetValue(1)
+		if table.HasValue(trackents,ent) then 
+			for k,v in pairs(trackents) do 
+				if v == ent then 
+				table.remove(trackents,k) 
+				end 
+			end
+				on:RemoveLine(on:GetSelectedLine())
+				noton:AddLine(ent)
+		end
+	end
+end
+
+local added = {}
+for _,v in pairs(ents.GetAll()) do
+
+if !table.HasValue(added,v:GetClass()) and !table.HasValue(trackents,v:GetClass()) and !string.find(v:GetClass(),"phys") and v:GetClass() != "player" then
+noton:AddLine(v:GetClass())
+table.insert(added,v:GetClass())
+end
+
+end
+
+for _,v in pairs(trackents) do
+on:AddLine(v)
+end
+
+end
+concommand.Add("lenny_ents", entmenu)
 
 
 --this is more efficient than looping through every player in a drawing hook
@@ -42,10 +128,19 @@ local function wh()
 			end
 		end
 		for k, v in pairs(plys) do
-			if v:IsValid() then
-				render.SetColorModulation( 255, 0, 0, 0)
-				render.SetBlend(.75)
-				v:DrawModel()
+			if v:IsValid()  then
+				local teamcolor = v:IsPlayer() and team.GetColor(v:Team()) or Color(255,128,0,255)
+				if whtype >= 1 then
+				v:SetMaterial("models/debug/debugwhite") 
+				else
+				v:SetMaterial("models/wireframe")	
+				end
+				render.SetColorModulation(teamcolor.r / 255, teamcolor.g / 255, teamcolor.b / 255) 
+				render.SetBlend(teamcolor.a / 255) 
+				v:SetColor(teamcolor) 
+				v:DrawModel() 
+				v:SetColor(Color(255,255,255)) 
+				v:SetMaterial("")
 			end
 		end
 	cam.End3D()
@@ -63,7 +158,9 @@ end
 cvars.AddChangeCallback("lenny_wh_radius", function() 
 	radius = GetConVarNumber("lenny_wh_radius")
 end)
-
+cvars.AddChangeCallback("lenny_wh_type", function() 
+ whtype = GetConVarNumber("lenny_wh_type")
+end)
 cvars.AddChangeCallback("lenny_wh", function() 
 	if GetConVarNumber("lenny_wh") == 1 then
 		hook.Add("HUDPaint", "wh", wh)
@@ -120,7 +217,7 @@ timer.Create("espentrefresh", 1, 0, function()
 				end
 			elseif v:IsNPC() then
 				table.insert(espnpcs, v)
-			elseif string.find(v:GetClass(), "weapon") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") or string.find(v:GetClass(), "money") or string.find(v:GetClass(), "durgz") then
+			elseif table.HasValue(trackents,v:GetClass()) then
 				if not string.find(v:GetClass(), "phys") then
 					table.insert(espents, v)
 				end
@@ -142,7 +239,7 @@ timer.Create("espentrefresh", 1, 0, function()
 				end
 			elseif v:IsNPC() then
 				table.insert(espnpcs, v)
-			elseif string.find(v:GetClass(), "spawned_weapon") or string.find(v:GetClass(), "info_player") or string.find(v:GetClass(), "shipment") or string.find(v:GetClass(), "printer") or string.find(v:GetClass(), "money") or string.find(v:GetClass(), "durgz") or string.find(v:GetClass(), "seed") then
+			elseif table.HasValue(trackents,v:GetClass()) then
 				if not string.find(v:GetClass(), "phys") then
 					table.insert(espents, v)
 				end
