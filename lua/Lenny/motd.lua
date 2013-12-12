@@ -5,6 +5,27 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 
 
+function lennymotd(w, h, col)
+	--BackGround
+		surface.SetDrawColor(col)
+		surface.DrawRect(0, 0 , w, h)
+	--BackGround
+
+	--Bottom BAR
+		surface.SetDrawColor(255,128,0,255)
+		surface.DrawRect(0, h-10 , w, 10)
+	--BOTTOM BAR
+
+	--TOP BAR
+		surface.SetDrawColor(255,128,0,255)
+		surface.DrawRect(0, 0 , w, 10)
+	--TOP BAR
+
+	-- OUTLINE/RIGHT BAR
+		surface.SetDrawColor(255,128,0,255)
+		surface.DrawOutlinedRect(0, 0, w, h)
+	-- OUTLINE/RIGHT BAR
+	end
 
 local function lennymenu()
 	local w = ScrW()
@@ -14,25 +35,26 @@ local function lennymenu()
 	frame:SetSize(w - 150, h - 150)
 	frame:Center()
 	frame:MakePopup()
-	--frame:ShowCloseButton(false)
+	frame:ShowCloseButton(false)
 
 	local fw, fh = frame:GetWide(), frame:GetTall()
 
-	frame:SetTitle( "Lenny's Scripts" )
+	frame:SetTitle( "" )
+
 	frame.Paint = function ()
-		draw.RoundedBox(20, 0, 0, fw, fh, Color(50, 50, 50)  )
+		lennymotd(fw, fh, Color(30,30,30,255))
 	end
 	
 	local closebtn = vgui.Create("DButton", frame)
-	closebtn:SetSize(150,50)
-	closebtn:SetText("Close")
-	closebtn:SetPos(fw-160, fh-60)
+	closebtn:SetSize(30,50)
+	closebtn:SetText("")
+	closebtn:SetPos(fw-60, 20)
 	closebtn.DoClick = function()
 		frame:Close()
 	end
 	closebtn.Paint = function()
-		surface.SetDrawColor(255, 255, 200)
-		surface.DrawRect(0, 0, closebtn:GetWide(), closebtn:GetTall())
+		lennymotd(closebtn:GetWide(), closebtn:GetTall(), Color(255,255,200,255))
+		draw.DrawText("X", "Trebuchet24", closebtn:GetWide()*.5, closebtn:GetTall()*.3, Color(255, 0, 0),TEXT_ALIGN_CENTER)
 	end
 
 	local donbtn = vgui.Create("DButton", frame)
@@ -46,8 +68,7 @@ local function lennymenu()
 		gui.OpenURL("http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R6E7PJUATS5KW")
 	end
 	donbtn.Paint = function()
-		surface.SetDrawColor(0, 100, 255)
-		surface.DrawRect(0, 0, donbtn:GetWide(), donbtn:GetTall())
+		lennymotd(donbtn:GetWide(), donbtn:GetTall(), Color(0,100,255,255))
 		draw.DrawText("Donate!", "Trebuchet24", donbtn:GetWide()*.5, donbtn:GetTall()*.3, Color(0, 255, 0),TEXT_ALIGN_CENTER)
 	end
 
@@ -82,8 +103,7 @@ local function lennymenu()
 		gui.OpenURL("http://www.gmod.itsLenny.de/Lennys")
 	end
 	websitebtn.Paint = function()
-		surface.SetDrawColor(50, 150, 150)
-		surface.DrawRect(0, 0, websitebtn:GetWide(), websitebtn:GetTall())
+		lennymotd(websitebtn:GetWide(), websitebtn:GetTall(), Color(50, 150, 150,255))
 		draw.DrawText("Wesbite", "Trebuchet24", websitebtn:GetWide()*.5, websitebtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
 	end
 
@@ -95,8 +115,7 @@ local function lennymenu()
 		gui.OpenURL("http://www.gmod.itsLenny.de/Lennys")
 	end
 	tutsitebtn.Paint = function()
-		surface.SetDrawColor(150, 150, 50)
-		surface.DrawRect(0, 0, tutsitebtn:GetWide(), tutsitebtn:GetTall())
+		lennymotd(tutsitebtn:GetWide(), tutsitebtn:GetTall(), Color(150, 150, 50,255))
 		draw.DrawText("Tutorials (Coming Soon!)", "Trebuchet24", tutsitebtn:GetWide()*.5, tutsitebtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
 	end
 
@@ -108,8 +127,7 @@ local function lennymenu()
 		gui.OpenURL("http://www.gmod.itsLenny.de/Lennys")
 	end
 	hofbtn.Paint = function()
-		surface.SetDrawColor(150, 50, 150)
-		surface.DrawRect(0, 0, hofbtn:GetWide(), hofbtn:GetTall())
+		lennymotd(hofbtn:GetWide(), hofbtn:GetTall(), Color(150, 50, 150,255))
 		draw.DrawText("Hall Of Fame (Coming Soon)", "Trebuchet24", hofbtn:GetWide()*.5, hofbtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
 	end
 
@@ -121,8 +139,7 @@ local function lennymenu()
 		gui.OpenURL("http://bly.itslenny.de/1egpIXx")
 	end
 	creditsbtn.Paint = function()
-		surface.SetDrawColor(150, 150, 150)
-		surface.DrawRect(0, 0, creditsbtn:GetWide(), creditsbtn:GetTall())
+		lennymotd(creditsbtn:GetWide(), creditsbtn:GetTall(), Color(150, 150, 150,255))
 		draw.DrawText("Credits", "Trebuchet24", creditsbtn:GetWide()*.5, creditsbtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
 	end
 end
