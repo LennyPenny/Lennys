@@ -90,7 +90,7 @@ end
 local added = {}
 for _,v in pairs(ents.GetAll()) do
 
-if !table.HasValue(added,v:GetClass()) and !table.HasValue(trackents,v:GetClass()) and !string.find(v:GetClass(),"phys") and v:GetClass() != "player" then
+if !table.HasValue(added,v:GetClass()) and !table.HasValue(trackents,v:GetClass()) and !string.find(v:GetClass(),"grav")  and !string.find(v:GetClass(),"phys") and v:GetClass() != "player" then
 noton:AddLine(v:GetClass())
 table.insert(added,v:GetClass())
 end
@@ -227,7 +227,7 @@ local espents = {}
 local function sortents(ent)
 	if (ent:IsPlayer() and !(LocalPlayer() == ent)) then
 
-		if table.HasValue(nonanons, ent:SteamID64()) then
+		if table.HasValue(nonanonp, ent:SteamID64()) then
 			table.insert(nonanons, ent)
 		end
 
@@ -242,10 +242,10 @@ local function sortents(ent)
 		end
 	elseif ent:IsNPC() then
 		table.insert(espnpcs, ent)
-	elseif string.find(ent:GetClass(), "weapon") or string.find(ent:GetClass(), "shipment") or string.find(ent:GetClass(), "printer") or string.find(ent:GetClass(), "money") or string.find(ent:GetClass(), "durgz") then
-		if !string.find(ent:GetClass(), "phys") and !string.find(ent:GetClass(), "grav")  then
+	elseif table.HasValue(trackents,ent:GetClass()) then
+
 			table.insert(espents, ent)
-		end
+	
 	end
 end
 
