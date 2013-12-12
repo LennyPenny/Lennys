@@ -13,18 +13,23 @@ function lennymotd(w, h, col)
 
 	--Bottom BAR
 		surface.SetDrawColor(255,128,0,255)
-		surface.DrawRect(0, h-10 , w, 10)
+		--surface.DrawRect(0, h-5 , w, 5)
 	--BOTTOM BAR
 
 	--TOP BAR
 		surface.SetDrawColor(255,128,0,255)
-		surface.DrawRect(0, 0 , w, 10)
+		--surface.DrawRect(0, 0 , w, 5)
 	--TOP BAR
 
-	-- OUTLINE/RIGHT BAR
+	--Left BAR
 		surface.SetDrawColor(255,128,0,255)
-		surface.DrawOutlinedRect(0, 0, w, h)
-	-- OUTLINE/RIGHT BAR
+		surface.DrawRect(0, 0 , 3, h)
+
+
+	--right BAR
+		surface.SetDrawColor(255,128,0,255)
+		surface.DrawRect(w-3, 0 , w-3, h)
+
 	end
 
 local function lennymenu()
@@ -46,15 +51,15 @@ local function lennymenu()
 	end
 	
 	local closebtn = vgui.Create("DButton", frame)
-	closebtn:SetSize(30,50)
+	closebtn:SetSize(35,35)
 	closebtn:SetText("")
 	closebtn:SetPos(fw-60, 20)
 	closebtn.DoClick = function()
 		frame:Close()
 	end
 	closebtn.Paint = function()
-		lennymotd(closebtn:GetWide(), closebtn:GetTall(), Color(255,255,200,255))
-		draw.DrawText("X", "Trebuchet24", closebtn:GetWide()*.5, closebtn:GetTall()*.3, Color(255, 0, 0),TEXT_ALIGN_CENTER)
+		lennymotd(closebtn:GetWide(), closebtn:GetTall(), Color(30,30,30,255))
+		draw.DrawText("X", "Trebuchet24", closebtn:GetWide()*.5, closebtn:GetTall()*.15, Color(255, 0, 0),TEXT_ALIGN_CENTER)
 	end
 
 	local donbtn = vgui.Create("DButton", frame)

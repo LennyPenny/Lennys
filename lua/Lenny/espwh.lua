@@ -262,55 +262,11 @@ timer.Create("espentrefresh", 1, 0, function()
 
 	if espradius != 0 then
 		for k, v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), espradius)) do
-<<<<<<< HEAD
 			sortents(v)
 		end
 	else
 		for k, v in pairs(ents.GetAll()) do
 			sortents(v)
-=======
-			if (v:IsPlayer() and !(LocalPlayer() == v)) then
-				if v:IsSuperAdmin() then
-					table.insert(espsa, v)
-				elseif v:IsAdmin() then
-					table.insert(espadmins, v)
-				else
-					if !(v:GetFriendStatus() == "friend") then
-						table.insert(espplys, v)
-					else
-						table.insert(espfriends, v)
-					end
-				end
-			elseif v:IsNPC() then
-				table.insert(espnpcs, v)
-			elseif table.HasValue(trackents,v:GetClass()) then
-				if not string.find(v:GetClass(), "phys") then
-					table.insert(espents, v)
-				end
-			end
-		end
-	else
-		for k, v in pairs(ents.GetAll()) do
-			if (v:IsPlayer() and !(LocalPlayer() == v)) then
-				if v:IsSuperAdmin() then
-					table.insert(espsa, v)
-				elseif v:IsAdmin() then
-					table.insert(espadmins, v)
-				else
-					if !(v:GetFriendStatus() == "friend") then
-						table.insert(espplys, v)
-					else
-						table.insert(espfriends, v)
-					end
-				end
-			elseif v:IsNPC() then
-				table.insert(espnpcs, v)
-			elseif table.HasValue(trackents,v:GetClass()) then
-				if not string.find(v:GetClass(), "phys") then
-					table.insert(espents, v)
-				end
-			end
->>>>>>> d2bf8dbceb824707a4e73be4938ec610875d504a
 		end
 	end
 end)
