@@ -10,7 +10,7 @@ CreateClientConVar("lenny_bhophelper", 1)
 
 
 local function bhopper( cmd )
-	if cmd:KeyDown(IN_JUMP) then
+	if cmd:KeyDown(IN_JUMP) and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
 		local buttonsetter = cmd:GetButtons()
 		if !LocalPlayer():IsOnGround() then
 			buttonsetter = bit.band(buttonsetter, bit.bnot(IN_JUMP))
