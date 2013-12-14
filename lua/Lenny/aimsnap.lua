@@ -9,12 +9,40 @@ CreateClientConVar("lenny_aimsnap_fov", 500)
 CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
 CreateClientConVar("lenny_aimsnap_prioritize", 0)
 CreateClientConVar("lenny_aimsnap_target_friends", 0)
+CreateClientConVar("lenny_aimsnap_target_npcs", 0)
+CreateClientConVar("lenny_aimsnap_target_nonanons", 0)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
 
 local midx = ScrW()*.5
 local midy = ScrH()*.5
 
+-- getting all members of the nonanon groups to mark them for later
+local nonanonp = {}
+local nonanon = {}
+
+local function NonAnonPSuccess(body)
+	local ID64s = string.Explode("|", body)
+
+	if #ID64s > 0 then
+		table.remove(ID64s, #ID64s)
+		for k, v in pairs(ID64s) do
+			table.insert(nonanonp, v)
+		end
+	end
+end
+
+local function OnFail(error)
+	print("We failed to contact gmod.itslenny.de")
+	print(error)
+	
+end
+
+local function GetNonAnonPMembers()
+	http.Fetch("http://www.gmod.itslenny.de/lennys/nonanon/groupinfo", NonAnonPSuccess, OnFail)
+end
+
+GetNonAnonPMembers()
 
 
 local function sorter(v1, v2)
@@ -47,9 +75,52 @@ end
 local function aimsnap()
 	disfromaim = {}
 	surface.SetDrawColor(Color(255,255,255))
-	for k, v in pairs(player.GetAll()) do
-		if v != LocalPlayer() and v:Alive() then
-			if v:GetFriendStatus() != "friend" or GetConVarNumber("lenny_aimsnap_target_friends") == 1 then
+	local targets = player.GetAll()
+	if GetConVarNumber("lenny_aimsnap_target_npcs") == 1 then
+		for k, v in pairs(ents.GetAll()) do
+			if v:IsNPC() then
+				table.insert(targets, v)
+			end
+		end
+	end
+	for k, v in pairs(targets) do
+		if v:Health() > 0 then
+			if v != LocalPlayer() and v:IsPlayer() then
+				if v:GetFriendStatus() != "friend" or GetConVarNumber("lenny_aimsnap_target_friends") == 1 then
+					if !(table.HasValue(nonanonp, v:SteamID64())) or GetConVarNumber("lenny_aimsnap_target_nonanons") == 1 then
+						local hat = v:LookupBone("ValveBiped.Bip01_Head1")
+						if hat then
+							local hatpos, hatang = v:GetBonePosition(hat)
+							local scrpos = hatpos:ToScreen()
+							local tracedat = {}
+							tracedat.start = LocalPlayer():GetShootPos()
+							tracedat.endpos = hatpos
+							tracedat.mask = MASK_SHOT
+							local trac = util.TraceLine(tracedat)
+							if scrpos.visible then
+								local dmg = 0
+								if v:GetActiveWeapon():IsValid() then
+									if v:GetActiveWeapon():Clip1() > 0 then
+										--dmg = v:GetActiveWeapon().Primary.Damage or 0
+									end
+								end
+								local distocenter = math.Dist(midx,midy, scrpos.x,scrpos.y)
+								if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
+									if trac.Entity == NULL or trac.Entity == v then
+										if isinfov(distocenter) then
+											table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
+										end
+									end
+								else
+									if isinfov(distocenter) then
+										table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
+									end
+								end
+							end
+						end
+					end
+				end
+			elseif v:IsNPC() then
 				local hat = v:LookupBone("ValveBiped.Bip01_Head1")
 				if hat then
 					local hatpos, hatang = v:GetBonePosition(hat)
@@ -61,11 +132,6 @@ local function aimsnap()
 					local trac = util.TraceLine(tracedat)
 					if scrpos.visible then
 						local dmg = 0
-						if v:GetActiveWeapon():IsValid() then
-							if v:GetActiveWeapon():Clip1() > 0 then
-								--dmg = v:GetActiveWeapon().Primary.Damage or 0
-							end
-						end
 						local distocenter = math.Dist(midx,midy, scrpos.x,scrpos.y)
 						if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
 							if trac.Entity == NULL or trac.Entity == v then

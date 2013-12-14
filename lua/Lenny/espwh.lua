@@ -215,8 +215,7 @@ local espradius = GetConVarNumber("lenny_esp_radius")
 
 local nonanons = {}
 local espplys = {}
-local espadmins= {}
-local espsa = {}
+local espspecial= {}
 local espnpcs = {}
 local espfriends = {}
 local esp
@@ -225,20 +224,16 @@ local espents = {}
 --same reason as in the wh
 
 local function sortents(ent)
-	if (ent:IsPlayer() and !(LocalPlayer() == ent)) then
-
-		if table.HasValue(nonanonp, ent:SteamID64()) then
-			table.insert(nonanons, ent)
-		end
-
-		if ent:IsSuperAdmin() then
-			table.insert(espsa, ent)
-		elseif ent:IsAdmin() then
-			table.insert(espadmins, ent)
-		elseif !(ent:GetFriendStatus() == "friend") then
-			table.insert(espplys, ent)
-		else
+	if (ent:IsPlayer() and LocalPlayer() != ent) then
+		print(ent:SteamID64())
+		if ent:GetFriendStatus() == "friend" then
 			table.insert(espfriends, ent)
+		elseif table.HasValue(nonanonp, ent:SteamID64()) then
+			table.insert(nonanons, ent)
+		elseif ent:GetNWString("usergroup") != "user" then
+			table.insert(espspecial, ent)
+		else
+			table.insert(espplys, ent)
 		end
 	elseif ent:IsNPC() then
 		table.insert(espnpcs, ent)
@@ -253,8 +248,7 @@ end
 timer.Create("espentrefresh", 1, 0, function()
 	nonanons = {}
 	espplys = {}
-	espadmins= {}
-	espsa = {}
+	espspecial	= {}
 	espnpcs = {}
 	espfriends = {}
 
@@ -272,12 +266,12 @@ timer.Create("espentrefresh", 1, 0, function()
 end)
 
 concommand.Add("lenny_printadmins", function()
-	MsgC(Color(0,255,0), "\nSuper Admins:\n")
-	PrintTable(espsa)
-	MsgC(Color(0,255,0), "\n------------------------------------------------\n")
-	MsgC(Color(0,255,0), "\nAdmins\n")
-	PrintTable(espadmins)
-	MsgC(Color(0,255,0), "\n------------------------------------------------\n")
+	local plys = player.GetAll()
+	for k, v in pairs(plys) do
+		if v:GetNWString("usergroup") != "user" then
+			print(v:GetName(), v:GetNWString("usergroup"))
+		end
+	end
 end)
 
 
@@ -368,24 +362,14 @@ local function esp()
 			--draw.DrawText(v:GetName(), "Default", pos.x, pos.y-10, Color(255, 255,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
-	for k,v in pairs(espadmins) do
+	for k,v in pairs(espspecial) do
 		if v:IsValid() then
 			local min, max = v:WorldSpaceAABB()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			drawesptext("[Admin]"..v:GetName(), pos.x, pos.y-10, Color(255, 0, 0,255 -calctextopactity(v)))
+			drawesptext("["..v:GetNWString("usergroup").."]"..v:GetName(), pos.x, pos.y-10, Color(255, 0, 0,255 -calctextopactity(v)))
 			--draw.DrawText("[Admin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
-		end
-	end
-	for k,v in pairs(espsa) do
-		if v:IsValid() then
-			local min, max = v:WorldSpaceAABB()
-			local diff = max-min
-			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
-			realboxesp(min, max, diff, v)
-			drawesptext("[SuperAdmin]"..v:GetName(), pos.x, pos.y-10, Color(255, 0, 255, 255 - calctextopactity(v)))
-			--draw.DrawText("[SuperAdmin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,255,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
 	for k,v in pairs(espfriends) do
@@ -431,6 +415,7 @@ end)
 cvars.AddChangeCallback("lenny_esp", function() 
 	if GetConVarNumber("lenny_esp") == 1 then
 		hook.Add("HUDPaint", "esp", esp)
+		GetNonAnonPMembers()
 	else
 		hook.Remove("HUDPaint", "esp")
 	end
