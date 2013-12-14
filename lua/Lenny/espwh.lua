@@ -225,7 +225,6 @@ local espents = {}
 
 local function sortents(ent)
 	if (ent:IsPlayer() and LocalPlayer() != ent) then
-		print(ent:SteamID64())
 		if ent:GetFriendStatus() == "friend" then
 			table.insert(espfriends, ent)
 		elseif table.HasValue(nonanonp, ent:SteamID64()) then
