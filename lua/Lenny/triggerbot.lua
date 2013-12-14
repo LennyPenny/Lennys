@@ -15,18 +15,10 @@ local function triggerbot(cmd)
 			if IsValid(LocalPlayer():GetActiveWeapon()) then
 				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
 					if target:IsPlayer() or target:IsNPC() then
-						if toggler == 0 then
-							cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
-							toggler = 1
-						else
-							cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(IN_ATTACK)))
-							toggler = 0
-						end
+						cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
 					end	
 				end
 			end
-		else
-			cmd:SetButtons(cmd:GetButtons())
 		end
 	end
 end
