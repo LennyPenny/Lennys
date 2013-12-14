@@ -238,9 +238,7 @@ local function sortents(ent)
 	elseif ent:IsNPC() then
 		table.insert(espnpcs, ent)
 	elseif table.HasValue(trackents,ent:GetClass()) then
-
-			table.insert(espents, ent)
-	
+		table.insert(espents, ent)
 	end
 end
 

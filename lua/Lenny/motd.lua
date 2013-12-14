@@ -129,11 +129,11 @@ local function lennymenu()
 	hofbtn:SetPos(50, 535)
 	hofbtn:SetText("")
 	hofbtn.DoClick = function()
-		gui.OpenURL("http://www.gmod.itsLenny.de/Lennys")
+		gui.OpenURL("http://www.gmod.itsLenny.de/Lennys/hof")
 	end
 	hofbtn.Paint = function()
 		lennymotd(hofbtn:GetWide(), hofbtn:GetTall(), Color(150, 50, 150,255))
-		draw.DrawText("Hall Of Fame (Coming Soon)", "Trebuchet24", hofbtn:GetWide()*.5, hofbtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
+		draw.DrawText("Hall Of Fame (New!)", "Trebuchet24", hofbtn:GetWide()*.5, hofbtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
 	end
 
 	local creditsbtn = vgui.Create("DButton", frame)
@@ -146,6 +146,30 @@ local function lennymenu()
 	creditsbtn.Paint = function()
 		lennymotd(creditsbtn:GetWide(), creditsbtn:GetTall(), Color(150, 150, 150,255))
 		draw.DrawText("Credits", "Trebuchet24", creditsbtn:GetWide()*.5, creditsbtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
+	end
+
+	local analyticsbtn = vgui.Create("DButton", frame)
+	analyticsbtn:SetSize(300,60)
+	analyticsbtn:SetPos(dbx - 400, fh-100)
+	analyticsbtn:SetText("")
+	analyticsbtn.DoClick = function()
+		gui.OpenURL("http://www.gmod.itslenny.de/analytics/")
+	end
+	analyticsbtn.Paint = function()
+		lennymotd(analyticsbtn:GetWide(), analyticsbtn:GetTall(), Color(0, 200, 255,255))
+		draw.DrawText("Analytics (New!)", "Trebuchet24", analyticsbtn:GetWide()*.5, analyticsbtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
+	end
+
+	local serverbrowserbtn = vgui.Create("DButton", frame)
+	serverbrowserbtn:SetSize(300,60)
+	serverbrowserbtn:SetPos(dbx + 400, fh-100)
+	serverbrowserbtn:SetText("")
+	serverbrowserbtn.DoClick = function()
+		gui.OpenURL("http://www.gmod.itslenny.de/analytics/serverbrowser")
+	end
+	serverbrowserbtn.Paint = function()
+		lennymotd(serverbrowserbtn:GetWide(), serverbrowserbtn:GetTall(), Color(255, 0, 100, 255))
+		draw.DrawText("Server Browser (New!)", "Trebuchet24", serverbrowserbtn:GetWide()*.5, serverbrowserbtn:GetTall()*.3, Color(255, 255, 255),TEXT_ALIGN_CENTER)
 	end
 end
 
