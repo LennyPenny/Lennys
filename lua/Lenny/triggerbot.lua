@@ -25,8 +25,6 @@ local function triggerbot(cmd)
 					end	
 				end
 			end
-		else
-			cmd:SetButtons(cmd:GetButtons())
 		end
 	end
 end
