@@ -13,13 +13,12 @@ local blacklist = {
 
 local function GenerateName(parts)
 	local name = ""
-		while #name <= 20 and #parts > 0 do
-			local num = math.random(1, #parts)
-			local part = parts[num]
+		while #name <= 25 and #parts > 0 do
+			local part = parts[1]
 
 			local len = #name + # part
 			
-			if len <= 20 then
+			if len <= 25 then
 				name = name.." "..part
 			end
 			table.remove(parts, num)
@@ -27,13 +26,21 @@ local function GenerateName(parts)
 	return name
 end
 
+local function sorter(v1, v2)
+	if #v1 > #v2 then
+		return true
+	end
+end
+
 local function TrimNameTable(parts)
 	local lplyn = string.lower(LocalPlayer():Name())
 	for k, v in pairs(parts) do
-		if string.find(lplyn, string.lower(v)) then
+		if string.find(lplyn, string.lower(v), 0, 0) then
 			table.remove(parts, k)
 		end
 	end
+
+	table.sort(parts, sorter)
 
 	return parts
 end
@@ -42,7 +49,7 @@ local function CheckBlackList(ply)
 	local failed = false
 	if !ply:IsAdmin() and !ply:IsSuperAdmin() then
 		for k, v in pairs(blacklist) do
-			if string.find(string.lower(ply:Name()), v) then
+			if string.find(string.lower(ply:Name()), v, 0, 0) then
 				failed = true
 				break
 			end

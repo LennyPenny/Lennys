@@ -8,6 +8,7 @@ CreateClientConVar("lenny_aimsnap", 0)
 CreateClientConVar("lenny_aimsnap_fov", 500)
 CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
 CreateClientConVar("lenny_aimsnap_prioritize", 0)
+CreateClientConVar("lenny_aimsnap_target_friends", 0)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
 
@@ -48,7 +49,7 @@ local function aimsnap()
 	surface.SetDrawColor(Color(255,255,255))
 	for k, v in pairs(player.GetAll()) do
 		if v != LocalPlayer() and v:Alive() then
-			if v:GetFriendStatus() != "friend" then
+			if v:GetFriendStatus() != "friend" or GetConVarNumber("lenny_aimsnap_target_friends") == 1 then
 				local hat = v:LookupBone("ValveBiped.Bip01_Head1")
 				if hat then
 					local hatpos, hatang = v:GetBonePosition(hat)

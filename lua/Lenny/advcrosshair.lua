@@ -23,9 +23,9 @@ local function advcrosshair()
 			local dosh = target.DarkRPVars.money
 			if not dosh then dosh = "" end
 		
-			if LocalPlayer():GetActiveWeapon():Clip1() < 1  then -- Check if they are holding a gun(Where to draw money)
+			if LocalPlayer():GetActiveWeapon():Clip1() < 1 then -- Check if they are holding a gun(Where to draw money)
 			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+30, Color(0,255,255), 1)
-			else
+			elseif (LocalPlayer():GetActiveWeapon().Primary or LocalPlayer():GetActiveWeapon().Primary.Damage) then
 			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+40, Color(0,255,255), 1)
 			end
 		
@@ -33,7 +33,7 @@ local function advcrosshair()
 		
 			surface.SetDrawColor(Color(255,0,0))
 			if LocalPlayer():GetActiveWeapon():IsValid() then
-				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+				if LocalPlayer():GetActiveWeapon():Clip1() > 0 and (LocalPlayer():GetActiveWeapon().Primary and LocalPlayer():GetActiveWeapon().Primary.Damage) then
 
 					draw.DrawText("Shots to kill: "..math.ceil(target:Health()/LocalPlayer():GetActiveWeapon().Primary.Damage), "Default", mx, my+30, Color(0,255,255), 1)
 
