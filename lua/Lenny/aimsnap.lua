@@ -11,6 +11,7 @@ CreateClientConVar("lenny_aimsnap_prioritize", 0)
 CreateClientConVar("lenny_aimsnap_target_friends", 0)
 CreateClientConVar("lenny_aimsnap_target_npcs", 0)
 CreateClientConVar("lenny_aimsnap_target_nonanons", 0)
+CreateClientConVar("lenny_aimsnap_single_target", 0)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
 
@@ -84,7 +85,7 @@ local function aimsnap()
 		end
 	end
 	for k, v in pairs(targets) do
-		if v:Health() > 0 then
+		if v:Health() > 0 or GetConVarNumber("lenny_aimsnap_single_target") == 1 then
 			if v != LocalPlayer() and v:IsPlayer() then
 				if v:GetFriendStatus() != "friend" or GetConVarNumber("lenny_aimsnap_target_friends") == 1 then
 					if !(table.HasValue(nonanonp, v:SteamID64())) or GetConVarNumber("lenny_aimsnap_target_nonanons") == 1 then
