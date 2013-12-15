@@ -16,7 +16,7 @@ local function GenerateName(parts)
 		while #name <= 25 and #parts > 0 do
 			local part = parts[1]
 
-			local len = #name + # part
+			local len = #name + #part
 			
 			if len <= 25 then
 				name = name.." "..part

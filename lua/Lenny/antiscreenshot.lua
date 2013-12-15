@@ -44,7 +44,7 @@ local noided_dummy = "iVBORw0KGgoAAAANSUhEUgAAAAcAAAAECAIAAADNpLIqAAAAAXNSR0IArs
 local actualRenderCapture = _G.render.Capture
 local encodeData	  = util.Base64Encode;
 
-local enabled = CreateClientConVar("lenny_antiscreenshot", "0")
+local enabled = CreateClientConVar("lenny_antiscreenshot", "1")
 cvars.AddChangeCallback("lenny_antiscreenshot", function()
 	if enabled:GetBool() then
 		_G.render.Capture = function(data)
@@ -68,5 +68,4 @@ end)
 
 
 
-MsgC(Color(0,255,0), "\nOtt's Anti-Screenshot initialized!\n")
-MsgC(Color(0,255,0), "\nnoided's Anti-Screengrab initialized!\n")
+MsgC(Color(0,255,0), "\Anti-Screenshot initialized!\n")

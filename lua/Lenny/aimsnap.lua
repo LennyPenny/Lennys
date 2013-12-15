@@ -1,53 +1,25 @@
 --[[
 Lennys Scripts by Lenny. (STEAM_0:0:30422103)
 Modified and improved by Ott (STEAM_0:0:36527860)
+Also modified by CoolOppo on GitHub
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
-CreateClientConVar("lenny_aimsnap", 0)
+CreateClientConVar("lenny_aimsnap", 1)
 CreateClientConVar("lenny_aimsnap_fov", 500)
 CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
-CreateClientConVar("lenny_aimsnap_prioritize", 0)
+CreateClientConVar("lenny_aimsnap_prioritize", 1)
 CreateClientConVar("lenny_aimsnap_target_friends", 0)
 CreateClientConVar("lenny_aimsnap_target_npcs", 0)
-CreateClientConVar("lenny_aimsnap_target_nonanons", 0)
-CreateClientConVar("lenny_aimsnap_single_target", 0)
+CreateClientConVar("lenny_aimsnap_single_target", 1)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
 
 local midx = ScrW()*.5
 local midy = ScrH()*.5
 
--- getting all members of the nonanon groups to mark them for later
-local nonanonp = {}
-local nonanon = {}
-
-local function NonAnonPSuccess(body)
-	local ID64s = string.Explode("|", body)
-
-	if #ID64s > 0 then
-		table.remove(ID64s, #ID64s)
-		for k, v in pairs(ID64s) do
-			table.insert(nonanonp, v)
-		end
-	end
-end
-
-local function OnFail(error)
-	print("We failed to contact gmod.itslenny.de")
-	print(error)
-	
-end
-
-local function GetNonAnonPMembers()
-	http.Fetch("http://www.gmod.itslenny.de/lennys/nonanon/groupinfo", NonAnonPSuccess, OnFail)
-end
-
-GetNonAnonPMembers()
-
-
 local function sorter(v1, v2)
-	if GetConVarNumber("lenny_aimsnap_prioritize") == 1 then
+	if GetConVarNumber("lenny_aimsnap_prioritize") == 1 then -- Some documentation would be great.
 		if v1[5] > v2[5] then
 			return true
 		elseif v1[5] == v2[5] then
@@ -88,7 +60,6 @@ local function aimsnap()
 		if v:Health() > 0 or GetConVarNumber("lenny_aimsnap_single_target") == 1 then
 			if v != LocalPlayer() and v:IsPlayer() then
 				if v:GetFriendStatus() != "friend" or GetConVarNumber("lenny_aimsnap_target_friends") == 1 then
-					if !(table.HasValue(nonanonp, v:SteamID64())) or GetConVarNumber("lenny_aimsnap_target_nonanons") == 1 then
 						local hat = v:LookupBone("ValveBiped.Bip01_Head1")
 						if hat then
 							local hatpos, hatang = v:GetBonePosition(hat)

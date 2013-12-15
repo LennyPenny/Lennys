@@ -24,12 +24,14 @@ local function falldamage()
  				return view	
 			end)
 		end
-		cmd:SetViewAngles(Angle(90, ang.yaw, 0))
 
+		cmd:SetViewAngles(Angle(90, ang.yaw, 0))
 		local trace = LocalPlayer():GetEyeTrace()
+		cmd:SetViewAngles(view.angles)
 		if trace.HitWorld then
 			if LocalPlayer():GetPos():Distance(trace.HitPos) < 25 then
 				hook.Remove("CreateMove", "anti-falldmg")
+				cmd:SetViewAngles(Angle(90, ang.yaw, 0))
 				RunConsoleCommand("gm_spawn", GetConVarString("lenny_stopfalldmg_prop"))
 				cmd:SetViewAngles(view.angles)
 				hook.Remove("CalcView", "FlyCam")
