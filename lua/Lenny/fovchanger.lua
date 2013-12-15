@@ -6,38 +6,38 @@ Credit to the author must be given when using/sharing this work or derivative wo
 CreateClientConVar("lenny_fov_on", 0)
 CreateClientConVar("lenny_fov", 100)
 
-local newfov =  GetConVarNumber("lenny_fov")
+local newfov = GetConVarNumber("lenny_fov")
 
 local function fov(ply, ori, ang, fov, nz, fz)
-	local view = {}
+    local view = {}
 
-	view.origin = ori
-	view.angles = ang
-	view.fov = newfov
+    view.origin = ori
+    view.angles = ang
+    view.fov = newfov
 
-	return view
+    return view
 end
 
 
 -- preperation
 hook.Remove("CalcView", "fov")
 timer.Simple(1, function()
-if GetConVarNumber("lenny_fov_on") == 1 then
-	hook.Add("CalcView", "fov", fov)
-end
+    if GetConVarNumber("lenny_fov_on") == 1 then
+        hook.Add("CalcView", "fov", fov)
+    end
 end)
 -- end of prep
 
-cvars.AddChangeCallback("lenny_fov", function() 
-	newfov = GetConVarNumber("lenny_fov")
+cvars.AddChangeCallback("lenny_fov", function()
+    newfov = GetConVarNumber("lenny_fov")
 end)
 
-cvars.AddChangeCallback("lenny_fov_on", function() 
-	if GetConVarNumber("lenny_fov_on") == 1 then
-		hook.Add("CalcView", "fov", fov)
-	else
-		hook.Remove("CalcView", "fov")
-	end
+cvars.AddChangeCallback("lenny_fov_on", function()
+    if GetConVarNumber("lenny_fov_on") == 1 then
+        hook.Add("CalcView", "fov", fov)
+    else
+        hook.Remove("CalcView", "fov")
+    end
 end)
 
-MsgC(Color(0,255,0), "\nLenny's FOV changer initialized!\n")
+MsgC(Color(0, 255, 0), "\nLenny's FOV changer initialized!\n")

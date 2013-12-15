@@ -8,25 +8,25 @@ Credit to the author must be given when using/sharing this work or derivative wo
 local counter = 0
 
 local function ropespam(cmd)
-	local buttonsetter = cmd:GetButtons()
-	if counter == 0 then
-		bit.band(buttonsetter, IN_ATTACK)
-		counter = counter +1
-	end
-	if counter == 1 then
-		counter = counter - counter
-	end
-	cmd:SetButtons(buttonsetter)
+    local buttonsetter = cmd:GetButtons()
+    if counter == 0 then
+        bit.band(buttonsetter, IN_ATTACK)
+        counter = counter + 1
+    end
+    if counter == 1 then
+        counter = counter - counter
+    end
+    cmd:SetButtons(buttonsetter)
 end
 
 
 concommand.Add("+lenny_ropespam", function()
-	hook.Add("CreateMove", "RopeSpam", ropespam)
+    hook.Add("CreateMove", "RopeSpam", ropespam)
 end)
 
 
 concommand.Add("-lenny_ropespam", function()
-	hook.Remove("CreateMove", "RopeSpam")
+    hook.Remove("CreateMove", "RopeSpam")
 end)
 
-MsgC(Color(0,255,0), "\nLennys Rope Spam initialized!\n")
+MsgC(Color(0, 255, 0), "\nLennys Rope Spam initialized!\n")

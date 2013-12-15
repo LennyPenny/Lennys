@@ -6,23 +6,22 @@ Credit to the author must be given when using/sharing this work or derivative wo
 
 Lenny = {} -- ohoh global table.... watch out!!!!!
 timer.Simple(.1, function()
-	Lenny.CurVersion = file.Read("LennysVersion.txt", "LUA")
+    Lenny.CurVersion = file.Read("LennysVersion.txt", "LUA")
 end)
-
 local function ReloadLennys()
-	include("Lenny.lua")
+    include("Lenny.lua")
 end
+
 concommand.Add("lenny_reload", ReloadLennys)
 
 local files, folders = file.Find("lua/Lenny/*.lua", "GAME")
 PrintTable(files)
 
-local timebetweenloads = .25 -- some people crash when loading all files at once
+local timebetweenloads = .1 -- some people crash when loading all files at once
 
 for k, v in pairs(files) do
-	timer.Simple(timebetweenloads * k, function()
-		include("Lenny/" .. v)
-	end)
+    timer.Simple(timebetweenloads * k, function()
+        include("Lenny/" .. v)
+    end)
 end
-MsgC(Color(0,255,255), "\nAll of Lennys scripts initialized!\n\n")
-
+MsgC(Color(0, 255, 255), "\nAll of Lennys scripts initialized!\n\n")

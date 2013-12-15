@@ -8,25 +8,25 @@ Thanks to oubielette
 CreateClientConVar("lenny_darkrpgod", 0)
 
 local function darkrpgod()
-	if LocalPlayer():Health() < 75 and LocalPlayer():Alive() then
-		LocalPlayer():ConCommand("say /buyhealth")
-	end
+    if LocalPlayer():Health() < 75 and LocalPlayer():Alive() then
+        LocalPlayer():ConCommand("say /buyhealth")
+    end
 end
 
 
 hook.Remove("Think", "darkrogod")
 timer.Simple(1, function()
-if GetConVarNumber("lenny_darkrpgod") == 1 then
-	hook.Add("Think", "darkrpgod", darkrpgod)
-end
+    if GetConVarNumber("lenny_darkrpgod") == 1 then
+        hook.Add("Think", "darkrpgod", darkrpgod)
+    end
 end)
 -- end of prep
 
 
-cvars.AddChangeCallback("lenny_darkrpgod", function() 
-	if GetConVarNumber("lenny_darkrpgod") == 1 then
-		hook.Add("Think", "darkrpgod", darkrpgod)
-	else
-		hook.Remove("Think", "darkrpgod")
-	end
+cvars.AddChangeCallback("lenny_darkrpgod", function()
+    if GetConVarNumber("lenny_darkrpgod") == 1 then
+        hook.Add("Think", "darkrpgod", darkrpgod)
+    else
+        hook.Remove("Think", "darkrpgod")
+    end
 end)

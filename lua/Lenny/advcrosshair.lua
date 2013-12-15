@@ -5,55 +5,54 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 CreateClientConVar("lenny_advcrosshair", 0)
 CreateClientConVar("lenny_advcrosshair_money", 0)
-local mx = ScrW()*.5 --middle x
-local my = ScrH()*.5  --middle y
+local mx = ScrW() * .5 --middle x
+local my = ScrH() * .5 --middle y
 
 local function advcrosshair()
-	if LocalPlayer():Health() > 0 then
-		local target = LocalPlayer():GetEyeTrace().Entity
-		if target:IsPlayer() or target:IsNPC() then
-			surface.SetDrawColor(Color(255,255,255))
+    if LocalPlayer():Health() > 0 then
+        local target = LocalPlayer():GetEyeTrace().Entity
+        if target:IsPlayer() or target:IsNPC() then
+            surface.SetDrawColor(Color(255, 255, 255))
 
-			surface.DrawLine(mx-5, my+5, mx+5, my-5)
-			surface.DrawLine(mx-5, my-5, mx+5, my+5)
+            surface.DrawLine(mx - 5, my + 5, mx + 5, my - 5)
+            surface.DrawLine(mx - 5, my - 5, mx + 5, my + 5)
 
-			draw.DrawText("Health: "..target:Health(), "Default", mx, my+20, Color(255,255,0), 1)
-			if GetConVarNumber("lenny_advcrosshair_money") == 1 and target.DarkRPVars then
+            draw.DrawText("Health: " .. target:Health(), "Default", mx, my + 20, Color(255, 255, 0), 1)
+            if GetConVarNumber("lenny_advcrosshair_money") == 1 and target.DarkRPVars then
 
-			local dosh = target.DarkRPVars.money
-			if not dosh then dosh = "" end
-		
-			if LocalPlayer():GetActiveWeapon():Clip1() < 1 then -- Check if they are holding a gun(Where to draw money)
-			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+30, Color(0,255,255), 1)
-			elseif (LocalPlayer():GetActiveWeapon().Primary or LocalPlayer():GetActiveWeapon().Primary.Damage) then
-			draw.DrawText("Money: $"..tostring(dosh), "Default", mx, my+40, Color(0,255,255), 1)
-			end
-		
-			end
-		
-			surface.SetDrawColor(Color(255,0,0))
-			if LocalPlayer():GetActiveWeapon():IsValid() then
-				if LocalPlayer():GetActiveWeapon():Clip1() > 0 and (LocalPlayer():GetActiveWeapon().Primary and LocalPlayer():GetActiveWeapon().Primary.Damage) then
+                local dosh = target.DarkRPVars.money
+                if !dosh then dosh = "" end
 
-					draw.DrawText("Shots to kill: "..math.ceil(target:Health()/LocalPlayer():GetActiveWeapon().Primary.Damage), "Default", mx, my+30, Color(0,255,255), 1)
+                if LocalPlayer():GetActiveWeapon():Clip1() < 1 then -- Check if they are holding a gun(Where to draw money)
+                    draw.DrawText("Money: $" .. tostring(dosh), "Default", mx, my + 30, Color(0, 255, 255), 1)
+                elseif (LocalPlayer():GetActiveWeapon().Primary or LocalPlayer():GetActiveWeapon().Primary.Damage) then
+                    draw.DrawText("Money: $" .. tostring(dosh), "Default", mx, my + 40, Color(0, 255, 255), 1)
+                end
+            end
 
-					if LocalPlayer():KeyDown(IN_ATTACK)  then
-						surface.DrawLine(mx-10, my+10, mx-5, my+5)
-						surface.DrawLine(mx-10, my-10, mx-5, my-5)
-							surface.DrawLine(mx+10, my+10, mx+5, my+5)
-					surface.DrawLine(mx+10, my-10, mx+5, my-5)
-					end
-				end
-			end
-		else
-			surface.SetDrawColor(Color(255,255,255))
-		end
-	end
+            surface.SetDrawColor(Color(255, 0, 0))
+            if LocalPlayer():GetActiveWeapon():IsValid() then
+                if LocalPlayer():GetActiveWeapon():Clip1() > 0 and (LocalPlayer():GetActiveWeapon().Primary and LocalPlayer():GetActiveWeapon().Primary.Damage) then
 
-	surface.DrawLine(mx-35, my, mx-20, my)
-	surface.DrawLine(mx+35, my, mx+20, my)
-	surface.DrawLine(mx, my-35, mx, my-20)
-	surface.DrawLine(mx, my+35, mx, my+20)
+                    draw.DrawText("Shots to kill: " .. math.ceil(target:Health() / LocalPlayer():GetActiveWeapon().Primary.Damage), "Default", mx, my + 30, Color(0, 255, 255), 1)
+
+                    if LocalPlayer():KeyDown(IN_ATTACK) then
+                        surface.DrawLine(mx - 10, my + 10, mx - 5, my + 5)
+                        surface.DrawLine(mx - 10, my - 10, mx - 5, my - 5)
+                        surface.DrawLine(mx + 10, my + 10, mx + 5, my + 5)
+                        surface.DrawLine(mx + 10, my - 10, mx + 5, my - 5)
+                    end
+                end
+            end
+        else
+            surface.SetDrawColor(Color(255, 255, 255))
+        end
+    end
+
+    surface.DrawLine(mx - 35, my, mx - 20, my)
+    surface.DrawLine(mx + 35, my, mx + 20, my)
+    surface.DrawLine(mx, my - 35, mx, my - 20)
+    surface.DrawLine(mx, my + 35, mx, my + 20)
 end
 
 
@@ -61,16 +60,16 @@ end
 hook.Remove("HUDPaint", "advcrosshair")
 
 if GetConVarNumber("lenny_advcrosshair") == 1 then
-	hook.Add("HUDPaint", "advcrosshair", advcrosshair)
+    hook.Add("HUDPaint", "advcrosshair", advcrosshair)
 end
 --end of prep
 
-cvars.AddChangeCallback("lenny_advcrosshair", function() 
-	if GetConVarNumber("lenny_advcrosshair") == 1 then
-		hook.Add("HUDPaint", "advcrosshair", advcrosshair)
-	else
-		hook.Remove("HUDPaint", "advcrosshair")
-	end
+cvars.AddChangeCallback("lenny_advcrosshair", function()
+    if GetConVarNumber("lenny_advcrosshair") == 1 then
+        hook.Add("HUDPaint", "advcrosshair", advcrosshair)
+    else
+        hook.Remove("HUDPaint", "advcrosshair")
+    end
 end)
 
-MsgC(Color(0,255,0), "\nLennys Advanced crosshair initialized!\n")
+MsgC(Color(0, 255, 0), "\nLennys Advanced crosshair initialized!\n")

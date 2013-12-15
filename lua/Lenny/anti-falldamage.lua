@@ -4,46 +4,27 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 
-CreateClientConVar("lenny_stopfalldmg_prop",  "models/props_trainstation/trainstation_post001.mdl")
-
-local toggler = 0
-local ang
-local view = {}
+CreateClientConVar("lenny_stopfalldmg_prop", "models/props_trainstation/trainstation_post001.mdl")
+local origAngs
 local function falldamage()
-	hook.Add("CreateMove", "anti-falldmg", function(cmd)
-
-		ang = cmd:GetViewAngles()
-		if toggler == 0 then
-			oriang = ang
-			toggler = 1
-			hook.Add("CalcView", "FlyCam", function(ply, ori, ang, fov, nz, fz)
-				view.origin = ori
-				view.angles = Angle(30, ang.yaw,0)
-				view.fov = fov
-
- 				return view	
-			end)
-		end
-
-		cmd:SetViewAngles(Angle(90, ang.yaw, 0))
-		local trace = LocalPlayer():GetEyeTrace()
-		cmd:SetViewAngles(view.angles)
-		if trace.HitWorld then
-			if LocalPlayer():GetPos():Distance(trace.HitPos) < 25 then
-				hook.Remove("CreateMove", "anti-falldmg")
-				cmd:SetViewAngles(Angle(90, ang.yaw, 0))
-				RunConsoleCommand("gm_spawn", GetConVarString("lenny_stopfalldmg_prop"))
-				cmd:SetViewAngles(view.angles)
-				hook.Remove("CalcView", "FlyCam")
-				toggler = 0
-				timer.Simple(.1, function()
-					RunConsoleCommand("undo")
-				end)
-			end
-		end
-	end)
+    if !LocalPlayer():IsOnGround() then
+    hook.Add("CreateMove", "anti-falldmg", function(cmd)
+        origAngs = EyeAngles()
+        cmd:SetViewAngles(Angle(90, 0, 0))
+        local trace = LocalPlayer():GetEyeTrace()
+        if trace.HitWorld then
+            if LocalPlayer():GetPos():Distance(trace.HitPos) < 25 then
+                RunConsoleCommand("gm_spawn", GetConVarString("lenny_stopfalldmg_prop"))
+                cmd:SetViewAngles(Angle(origAngs)) -- This doesn't work properly and I don't know why
+                hook.Remove("CreateMove", "anti-falldmg")
+                timer.Simple(.1, function()
+                    RunConsoleCommand("undo")
+                end)
+            end
+        end
+    end)
+    end
 end
 
 concommand.Add("lenny_stopfalldmg", falldamage)
-
-MsgC(Color(0,255,0), "\nLennys Anti-Falldmg initialized!\n")
+MsgC(Color(0, 255, 0), "\nLennys Anti-Falldmg initialized!\n")

@@ -8,26 +8,26 @@ CreateClientConVar("lenny_flashlightspam", 0)
 
 
 local function flashspammer(cmd)
-	if  input.IsKeyDown(KEY_F) then
-		cmd:SetImpulse(100)
-	end
- end
+    if input.IsKeyDown(KEY_F) then
+        cmd:SetImpulse(100)
+    end
+end
 
 -- preperation
 hook.Remove("CreateMove", "flashspam")
 
 if GetConVarNumber("lenny_flashlightspam") == 1 then
-	hook.Add("CreateMove", "flashspam", flashspammer)
+    hook.Add("CreateMove", "flashspam", flashspammer)
 end
 -- end of prep
 
 
-cvars.AddChangeCallback("lenny_flashlightspam", function() 
-	if GetConVarNumber("lenny_flashlightspam") == 1 then
-		hook.Add("CreateMove", "flashspam", flashspammer)
-	else
-		hook.Remove("CreateMove", "flashspam")
-	end
+cvars.AddChangeCallback("lenny_flashlightspam", function()
+    if GetConVarNumber("lenny_flashlightspam") == 1 then
+        hook.Add("CreateMove", "flashspam", flashspammer)
+    else
+        hook.Remove("CreateMove", "flashspam")
+    end
 end)
 
-MsgC(Color(0,255,0), "\nLennys Flashlight spam initialized!\n")
+MsgC(Color(0, 255, 0), "\nLennys Flashlight spam initialized!\n")

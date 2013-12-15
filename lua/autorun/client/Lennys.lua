@@ -5,5 +5,5 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 CreateClientConVar("lenny_autorun", 1)
 if GetConVarNumber("lenny_autorun") == 1 then
-	include("Lenny.lua")
+    include("Lenny.lua")
 end
