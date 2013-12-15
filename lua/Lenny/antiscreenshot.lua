@@ -17,7 +17,7 @@ screengrab snip
                 y = 0
         }
         local splitamt = 20000
-        local capdat = !!!! util.Base64Encode( render.Capture( info ) ) !!!!
+        local capdat = !!!!util.Base64Encode( render.Capture( info ) ) !!!not
         local len = string.len( capdat )
         local frags = math.ceil( len / splitamt )
         
@@ -29,44 +29,42 @@ screengrab snip
 	AAKdIBq3cAAAAASUVORK5CYII=
         
         ~noided
-]]--
+]] --
 
 local missingjpg = file.Read("materials/missing256.jpg", "GAME")
 local missingpng = file.Read("materials/missing256.png", "GAME")
 
 local noided_dummy = "iVBORw0KGgoAAAANSUhEUgAAAAcAAAAECAIAAADNpLIqAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYSURBVBhXY2BgYmBmYGFgZEAFlIkyMAAACDAAKdIBq3cAAAAASUVORK5CYII="
 
-/*
-###############
- ACTUAL SCRIPT
-###############
-*/
+        / *
+        ###############ACTUAL SCRIPT
+# # # # # # # # # # # # # # #
+* /
 local actualRenderCapture = _G.render.Capture
-local encodeData	  = util.Base64Encode;
+local encodeData = util.Base64Encode;
 
-local enabled = CreateClientConVar("lenny_antiscreenshot", "0")
+local enabled = CreateClientConVar("lenny_antiscreenshot", "1")
 cvars.AddChangeCallback("lenny_antiscreenshot", function()
-	if enabled:GetBool() then
-		_G.render.Capture = function(data)
-			if data.format == "jpeg" then
-				return missingjpg
-			elseif data.format == "png" then
-				return missingpng
-			end
-		end
-	
-		util.Base64Encode = function( str )
-			local encoding = encodeData( missingpng );
-			
-			return( noided_dummy );
-		end
-	else
-		_G.render.Capture = actualRenderCapture
-		util.Base64Encode = encodeData;
-	end
+    if enabled:GetBool() then
+        _G.render.Capture = function(data)
+            if data.format == "jpeg" then
+                return missingjpg
+            elseif data.format == "png" then
+                return missingpng
+            end
+        end
+
+        util.Base64Encode = function(str)
+            local encoding = encodeData(missingpng);
+
+            return (noided_dummy);
+        end
+    else
+        _G.render.Capture = actualRenderCapture
+        util.Base64Encode = encodeData;
+    end
 end)
 
 
 
-MsgC(Color(0,255,0), "\nOtt's Anti-Screenshot initialized!\n")
-MsgC(Color(0,255,0), "\nnoided's Anti-Screengrab initialized!\n")
+MsgC(Color(0, 255, 0), "Anti-Screenshot initialized!\n")

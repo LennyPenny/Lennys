@@ -5,37 +5,37 @@ Credit to the author must be given when using/sharing this work or derivative wo
 ]]
 -- thanks to vexx21322 for help with the bitwise arithmetics
 
-CreateClientConVar("lenny_bhop", 0)
+CreateClientConVar("lenny_bhop", 1)
 CreateClientConVar("lenny_bhophelper", 1)
 
 
-local function bhopper( cmd )
-	if cmd:KeyDown(IN_JUMP) and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
-		local buttonsetter = cmd:GetButtons()
-		if !LocalPlayer():IsOnGround() then
-			buttonsetter = bit.band(buttonsetter, bit.bnot(IN_JUMP))
-		end
-		cmd:SetButtons(buttonsetter)
-	end
+local function bhopper(cmd)
+    if cmd:KeyDown(IN_JUMP) and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
+    local buttonsetter = cmd:GetButtons()
+    if !LocalPlayer():IsOnGround() then
+    buttonsetter = bit.band(buttonsetter, bit.bnot(IN_JUMP))
+    end
+    cmd:SetButtons(buttonsetter)
+    end
 end
 
 
 -- preperation
 hook.Remove("CreateMove", "bunnyhop")
 timer.Simple(1, function()
-if GetConVarNumber("lenny_bhop") == 1 then
-	hook.Add("CreateMove", "bunnyhop", bhopper)
-end
+    if GetConVarNumber("lenny_bhop") == 1 then
+        hook.Add("CreateMove", "bunnyhop", bhopper)
+    end
 end)
 -- end of prep
 
 
-cvars.AddChangeCallback("lenny_bhop", function() 
-	if GetConVarNumber("lenny_bhop") == 1 then
-		hook.Add("CreateMove", "bunnyhop", bhopper)
-	else
-		hook.Remove("CreateMove", "bunnyhop")
-	end
+cvars.AddChangeCallback("lenny_bhop", function()
+    if GetConVarNumber("lenny_bhop") == 1 then
+        hook.Add("CreateMove", "bunnyhop", bhopper)
+    else
+        hook.Remove("CreateMove", "bunnyhop")
+    end
 end)
 
-MsgC(Color(0,255,0), "\nLenny Bhop initialized!\n")
+MsgC(Color(0, 255, 0), "\nLenny Bhop initialized!\n")

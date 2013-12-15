@@ -10,30 +10,30 @@ local prop = GetConVarString("lenny_propsurf_model")
 
 
 local function startsurf()
-	local ang = LocalPlayer():EyeAngles()
-	local oriang = ang
-	LocalPlayer():SetEyeAngles(Angle(30, ang.yaw+180,0))
-	timer.Simple(.1, function()
-		RunConsoleCommand("+attack")
-		RunConsoleCommand("gm_spawn", prop)
-		timer.Simple(.2, function()
-		LocalPlayer():SetEyeAngles(oriang)
-		end)
-	end)
+    local ang = LocalPlayer():EyeAngles()
+    local oriang = ang
+    LocalPlayer():SetEyeAngles(Angle(30, ang.yaw + 180, 0))
+    timer.Simple(.1, function()
+        RunConsoleCommand("+attack")
+        RunConsoleCommand("gm_spawn", prop)
+        timer.Simple(.2, function()
+            LocalPlayer():SetEyeAngles(oriang)
+        end)
+    end)
 end
 
 local function endsurf()
-	hook.Remove("CreateMove", "propsurf")
-	RunConsoleCommand("undo")
-	RunConsoleCommand("-attack")
+    hook.Remove("CreateMove", "propsurf")
+    RunConsoleCommand("undo")
+    RunConsoleCommand("-attack")
 end
 
 concommand.Add("+lenny_propsurf", startsurf)
 concommand.Add("-lenny_propsurf", endsurf)
 
-cvars.AddChangeCallback("lenny_propsurf_model", function() 
-	prop = GetConVarString("lenny_propsurf_model")
+cvars.AddChangeCallback("lenny_propsurf_model", function()
+    prop = GetConVarString("lenny_propsurf_model")
 end)
 
 
-MsgC(Color(0,255,0), "\nLennys propsurf initialized!\n")
+MsgC(Color(0, 255, 0), "\nLennys propsurf initialized!\n")

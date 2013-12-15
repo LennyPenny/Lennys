@@ -8,13 +8,13 @@ CreateClientConVar("lenny_norecoil", 1)
 
 
 local function norecoil()
-	if LocalPlayer():GetActiveWeapon():Clip1() > 0  then
-		if LocalPlayer():GetActiveWeapon().Recoil then
-			LocalPlayer():GetActiveWeapon().Recoil = 0
-		elseif LocalPlayer():GetActiveWeapon().Primary.Recoil then
-			LocalPlayer():GetActiveWeapon().Primary.Recoil = 0
-		end
-	end
+    if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+        if LocalPlayer():GetActiveWeapon().Recoil then
+            LocalPlayer():GetActiveWeapon().Recoil = 0
+        elseif LocalPlayer():GetActiveWeapon().Primary.Recoil then
+            LocalPlayer():GetActiveWeapon().Primary.Recoil = 0
+        end
+    end
 end
 
 
@@ -23,17 +23,17 @@ end
 hook.Remove("PlayerSwitchWeapon", "norecoil")
 
 if GetConVarNumber("lenny_norecoil") == 1 then
-	hook.Add("PlayerSwitchWeapon", "norecoil", norecoil)
+    hook.Add("PlayerSwitchWeapon", "norecoil", norecoil)
 end
 --end of prep
 
-cvars.AddChangeCallback("lenny_norecoil", function() 
-	if GetConVarNumber("lenny_norecoil") == 1 then
-		hook.Add("PlayerSwitchWeapon", "norecoil", norecoil)
-	else
-		hook.Remove("PlayerSwitchWeapon", "norecoil")
-	end
+cvars.AddChangeCallback("lenny_norecoil", function()
+    if GetConVarNumber("lenny_norecoil") == 1 then
+        hook.Add("PlayerSwitchWeapon", "norecoil", norecoil)
+    else
+        hook.Remove("PlayerSwitchWeapon", "norecoil")
+    end
 end)
 
 
-MsgC(Color(0,255,0), "\nLennys NoRecoil initialized!\n")
+MsgC(Color(0, 255, 0), "\nLennys NoRecoil initialized!\n")
