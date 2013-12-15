@@ -17,10 +17,10 @@ concommand.Add("lenny_reload", ReloadLennys)
 local files, folders = file.Find("lua/Lenny/*.lua", "GAME")
 PrintTable(files)
 
-local timebetweemloads = .05 -- some people crash when loading all files at once
+local timebetweenloads = .25 -- some people crash when loading all files at once
 
 for k, v in pairs(files) do
-	timer.Simple(timebetweemloads * k, function()
+	timer.Simple(timebetweenloads * k, function()
 		include("Lenny/" .. v)
 	end)
 end
