@@ -8,20 +8,22 @@ Thanks to oubielette and ab0mbs
 local blacklist = {
 	"owner",
 	"moderator",
-	"mod"
+	"mod",
+	"admin",
+	"superadmin"
 }
 
 local function GenerateName(parts)
 	local name = ""
 		while #name <= 25 and #parts > 0 do
-			local part = parts[1]
+			local part = parts[math.random(1, #parts)]
 
-			local len = #name + # part
+			local len = #name + #part
 			
 			if len <= 25 then
 				name = name.." "..part
 			end
-			table.remove(parts, num)
+			table.remove(parts, 1)
 		end
 	return name
 end
@@ -74,8 +76,9 @@ local function GetNameParts()
 	parts = TrimNameTable(parts)
 
 	name = GenerateName(parts)
-
-	LocalPlayer():ConCommand("say /name"..name)
+	
+	LocalPlayer():ConCommand("say /rpname"..name)
+	print(name)
 end
 
 
