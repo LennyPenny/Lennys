@@ -5,7 +5,7 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 Credit to the author must be given when using/sharing this work or derivative work from it.
 ]]
 CreateClientConVar("lenny_aimsnap", 0)
-CreateClientConVar("lenny_aimsnap_fov", 500)
+CreateClientConVar("lenny_aimsnap_fov", 45)
 CreateClientConVar("lenny_aimsnap_ignore_blocked", 1)
 CreateClientConVar("lenny_aimsnap_prioritize", 0)
 CreateClientConVar("lenny_aimsnap_target_friends", 0)
@@ -72,6 +72,21 @@ local function isinfov(dist)
 	end
 end
 
+local function angledistance(a, b, c)
+	return math.acos((a^2 + b^2 - c^2) / (2 * a * b)) * 59
+end
+
+local function rollover(n, min, max)
+	while true do
+		if n > max then
+			n = min + n - max
+		elseif n < min then
+			n = max - min - n
+		else
+			return n
+		end
+	end
+end
 
 local function aimsnap()
 	disfromaim = {}
@@ -90,6 +105,7 @@ local function aimsnap()
 				if v:GetFriendStatus() != "friend" or GetConVarNumber("lenny_aimsnap_target_friends") == 1 then
 					if !(table.HasValue(nonanonp, v:SteamID64())) or GetConVarNumber("lenny_aimsnap_target_nonanons") == 1 then
 						local hat = v:LookupBone("ValveBiped.Bip01_Head1")
+						local spine = v:LookupBone("ValveBiped.Bip01_Spine2")
 						if hat then
 							local hatpos, hatang = v:GetBonePosition(hat)
 							local scrpos = hatpos:ToScreen()
@@ -98,24 +114,21 @@ local function aimsnap()
 							tracedat.endpos = hatpos
 							tracedat.mask = MASK_SHOT
 							local trac = util.TraceLine(tracedat)
-							if scrpos.visible then
-								local dmg = 0
-								if v:GetActiveWeapon():IsValid() then
-									if v:GetActiveWeapon():Clip1() > 0 then
-										--dmg = v:GetActiveWeapon().Primary.Damage or 0
-									end
+							local dmg = 0
+							if v:GetActiveWeapon():IsValid() then
+								if v:GetActiveWeapon():Clip1() > 0 and v:GetActiveWeapon().Primary != nil then
+									dmg = v:GetActiveWeapon().Primary.Damage or 0
 								end
-								local distocenter = math.Dist(midx,midy, scrpos.x,scrpos.y)
+							end
+							local angdis = angledistance(LocalPlayer():GetShootPos():Distance(LocalPlayer():GetEyeTrace().HitPos), LocalPlayer():GetShootPos():Distance(hatpos), LocalPlayer():GetEyeTrace().HitPos:Distance(hatpos))
+							local distocenter = math.abs(rollover(angdis, -180, 180))
+							if isinfov(distocenter) then
 								if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
 									if trac.Entity == NULL or trac.Entity == v then
-										if isinfov(distocenter) then
-											table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
-										end
-									end
-								else
-									if isinfov(distocenter) then
 										table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
 									end
+								else
+									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
 								end
 							end
 						end
@@ -131,19 +144,16 @@ local function aimsnap()
 					tracedat.endpos = hatpos
 					tracedat.mask = MASK_SHOT
 					local trac = util.TraceLine(tracedat)
-					if scrpos.visible then
-						local dmg = 0
-						local distocenter = math.Dist(midx,midy, scrpos.x,scrpos.y)
+					local dmg = 0
+					local angdis = angledistance(LocalPlayer():GetShootPos():Distance(LocalPlayer():GetEyeTrace().HitPos), LocalPlayer():GetShootPos():Distance(hatpos), LocalPlayer():GetEyeTrace().HitPos:Distance(hatpos))
+					local distocenter = math.abs(rollover(angdis, -180, 180))
+					if isinfov(distocenter) then
 						if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
 							if trac.Entity == NULL or trac.Entity == v then
-								if isinfov(distocenter) then
-									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
-								end
-							end
-						else
-							if isinfov(distocenter) then
 								table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
 							end
+						else
+							table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
 						end
 					end
 				end
@@ -177,12 +187,18 @@ concommand.Add("+lenny_aim", function()
 				cmd:SetViewAngles((disfromaim[1][4] - LocalPlayer():GetShootPos()):Angle())
 			end
 		end)
+		hook.Add("Think", "snappyaim", function()
+			if disfromaim[1] then
+				LocalPlayer():SetEyeAngles((disfromaim[1][4] - LocalPlayer():GetShootPos()):Angle())
+			end
+		end)
 	end
 
 end)
 
 concommand.Add("-lenny_aim", function()
 	hook.Remove("CreateMove", "snappyaim")
+	hook.Remove("Think", "snappyaim")
 end)
 
 
