@@ -266,7 +266,7 @@ concommand.Add("lenny_printadmins", function()
 	local plys = player.GetAll()
 	for k, v in pairs(plys) do
 		if v:GetNWString("usergroup") != "user" then
-			print(v:GetName(), v:GetNWString("usergroup"))
+			print(v:GetName() .. string.rep("\t", math.Round(8 / #v:GetName())), v:GetNWString("usergroup"))
 		end
 	end
 end)
