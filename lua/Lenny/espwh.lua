@@ -225,7 +225,6 @@ local espents = {}
 
 local function sortents(ent)
 	if (ent:IsPlayer() and LocalPlayer() != ent) then
-		print(ent:SteamID64())
 		if ent:GetFriendStatus() == "friend" then
 			table.insert(espfriends, ent)
 		elseif table.HasValue(nonanonp, ent:SteamID64()) then
@@ -366,7 +365,7 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			drawesptext("["..v:GetNWString("usergroup").."]"..v:GetName(), pos.x, pos.y-10, Color(255, 0, 0,255 -calctextopactity(v)))
+			drawesptext("["..v:GetNWString("usergroup").."]"..v:GetName(), pos.x, pos.y-10, Color(0, 255, 255,255 -calctextopactity(v)))
 			--draw.DrawText("[Admin]"..v:GetName(), "Default", pos.x, pos.y-10, Color(255,0,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
