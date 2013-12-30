@@ -45,7 +45,7 @@ local actualRenderCapture = _G.render.Capture
 local encodeData	  = util.Base64Encode;
 
 local enabled = CreateClientConVar("lenny_antiscreenshot", "0")
-cvars.AddChangeCallback("lenny_antiscreenshot", function()
+local function antiscreenshot()
 	if enabled:GetBool() then
 		_G.render.Capture = function(data)
 			if data.format == "jpeg" then
@@ -64,7 +64,9 @@ cvars.AddChangeCallback("lenny_antiscreenshot", function()
 		_G.render.Capture = actualRenderCapture
 		util.Base64Encode = encodeData;
 	end
-end)
+end
+antiscreenshot()
+cvars.AddChangeCallback("lenny_antiscreenshot", antiscreenshot)
 
 
 
