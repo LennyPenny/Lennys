@@ -11,7 +11,8 @@ local function norecoil()
 	if LocalPlayer():GetActiveWeapon():Clip1() > 0  then
 		if LocalPlayer():GetActiveWeapon().Recoil then
 			LocalPlayer():GetActiveWeapon().Recoil = 0
-		elseif LocalPlayer():GetActiveWeapon().Primary.Recoil then
+		end
+		if LocalPlayer():GetActiveWeapon().Primary.Recoil then
 			LocalPlayer():GetActiveWeapon().Primary.Recoil = 0
 		end
 	end
