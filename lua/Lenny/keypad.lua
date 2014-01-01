@@ -45,7 +45,7 @@ local function survey()
 			kp.tempText = kp.tempText or ""
 			kp.tempStatus = kp.tempStatus or 0
 			
-			if kp:GetDisplayText() != kp.tempText or kp:GetStatus() != kp.tempStatus then
+			if (kp:GetDisplayText() != kp.tempText or kp:GetStatus() != kp.tempStatus) and GetDisplayText != nil then
 				kp.tempText = kp:GetDisplayText()
 				kp.tempStatus = kp:GetStatus()
 				
