@@ -14,9 +14,11 @@ Credit to the author must be given when using/sharing this work or derivative wo
 CreateClientConVar("lenny_wh_radius", 750)
 CreateClientConVar("lenny_wh", 0)
 CreateClientConVar("lenny_wh_type",0)
+CreateClientConVar("lenny_wh_noprops", 0)
 
 local radius = GetConVarNumber("lenny_wh_radius")
 local whtype = GetConVarNumber("lenny_wh_type")
+local noprops = GetConVarNumber("lenny_wh_noprops")
 
 local plys = {}
 local props = {}
@@ -24,6 +26,7 @@ local trackents = { -- Set Default entities here, lenny_ents to add while you're
 "spawned_money",
 "spawned_shipment",
 "spawned_weapon",
+"money_printer",
 "weapon_ttt_knife",
 "weapon_ttt_c4",
 "npc_tripmine"
@@ -112,7 +115,7 @@ timer.Create("entrefresh", 1, 0, function()
 	for k, v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), radius)) do
 		if (v:IsPlayer() and !(LocalPlayer() == v)) or v:IsNPC() then
 			table.insert(plys, v)
-		elseif v:GetClass() == "prop_physics" then
+		elseif v:GetClass() == "prop_physics" and not noprops then
 			table.insert(props, v)
 		end
 	end
