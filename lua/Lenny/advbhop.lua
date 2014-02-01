@@ -6,7 +6,6 @@ Credit to the author must be given when using/sharing this work or derivative wo
 -- thanks to vexx21322 for help with the bitwise arithmetics
 
 CreateClientConVar("lenny_bhop", 0)
-CreateClientConVar("lenny_bhophelper", 1)
 
 
 local function bhopper( cmd )
