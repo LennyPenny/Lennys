@@ -8,6 +8,7 @@ CreateClientConVar("lenny_propsurf_model", "models/props_c17/gravestone002a.mdl"
 
 local prop = GetConVarString("lenny_propsurf_model")
 local lastwep = ""
+local propent = Entity(-1) --No entity
 
 local function startsurf()
 	local ang = LocalPlayer():EyeAngles()
@@ -20,8 +21,19 @@ local function startsurf()
 	timer.Simple(.1, function()
 		RunConsoleCommand("+attack")
 		RunConsoleCommand("gm_spawn", prop)
-		timer.Simple(.2, function()
-		LocalPlayer():SetEyeAngles(oriang)
+		timer.Simple(.1, function()
+			if LocalPlayer():GetEyeTrace().Entity != Entity(0) then
+				propent = LocalPlayer():GetEyeTrace().Entity
+				if propent:GetCollisionGroup() == COLLISION_GROUP_WORLD then
+					net.Start("properties")
+						net.WriteUInt(56, 32)
+						net.WriteUInt(propent:EntIndex(), 32)
+					net.SendToServer()
+				end
+			end
+			timer.Simple(.1, function()
+				LocalPlayer():SetEyeAngles(oriang)
+			end)
 		end)
 	end)
 end
