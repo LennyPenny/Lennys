@@ -31,6 +31,7 @@ local function falldamage()
 			if LocalPlayer():GetPos():Distance(trace.HitPos) < 25 then
 				hook.Remove("CreateMove", "anti-falldmg")
 				RunConsoleCommand("gm_spawn", GetConVarString("lenny_stopfalldmg_prop"))
+				view.angles = view.angles or Angle(30, ang.yaw, 0)
 				cmd:SetViewAngles(view.angles)
 				hook.Remove("CalcView", "FlyCam")
 				toggler = 0
