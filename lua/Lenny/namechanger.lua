@@ -77,7 +77,7 @@ local function GetNameParts()
 
 	name = GenerateName(parts)
 	
-	LocalPlayer():ConCommand("say /rpname"..name)
+	LocalPlayer():ConCommand("darkrp rpname "..name)
 	print(name)
 end
 
