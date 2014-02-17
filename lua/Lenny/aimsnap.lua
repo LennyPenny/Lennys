@@ -51,7 +51,7 @@ local function sorter(v1, v2)
 		if v1[5] > v2[5] then
 			return true
 		elseif v1[5] == v2[5] then
-			if v1[3] < v2[3] then
+			if v1[6] < v2[6] then
 				return true
 			end
 		end
@@ -122,13 +122,14 @@ local function aimsnap()
 							end
 							local angdis = angledistance(LocalPlayer():GetShootPos():Distance(LocalPlayer():GetEyeTrace().HitPos), LocalPlayer():GetShootPos():Distance(hatpos), LocalPlayer():GetEyeTrace().HitPos:Distance(hatpos))
 							local distocenter = math.abs(rollover(angdis, -180, 180))
+							local distoplayer = LocalPlayer():GetPos():Distance(v:GetPos())
 							if isinfov(distocenter) then
 								if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
 									if trac.Entity == NULL or trac.Entity == v then
-										table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
+										table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg, distoplayer})
 									end
 								else
-									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
+									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg, distoplayer})
 								end
 							end
 						end
@@ -183,13 +184,10 @@ concommand.Add("+lenny_aim", function()
 		chat.AddText("lenny_aimsnap must be 1 !!!")
 	else
 		hook.Add("CreateMove", "snappyaim", function(cmd)
-			if disfromaim[1] then
-				cmd:SetViewAngles((disfromaim[1][4] - LocalPlayer():GetShootPos()):Angle())
-			end
-		end)
-		hook.Add("Think", "snappyaim", function()
-			if disfromaim[1] then
-				LocalPlayer():SetEyeAngles((disfromaim[1][4] - LocalPlayer():GetShootPos()):Angle())
+			if disfromaim[1] and LocalPlayer():Alive() then
+				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+					cmd:SetViewAngles((disfromaim[1][4] - LocalPlayer():GetShootPos()):Angle())
+				end
 			end
 		end)
 	end
