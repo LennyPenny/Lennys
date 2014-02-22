@@ -12,11 +12,14 @@ CreateClientConVar("lenny_aimsnap_target_friends", 0)
 CreateClientConVar("lenny_aimsnap_target_npcs", 0)
 CreateClientConVar("lenny_aimsnap_target_nonanons", 0)
 CreateClientConVar("lenny_aimsnap_single_target", 0)
+CreateClientConVar("lenny_aimsnap_preserve_angles", 0)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
 
 local midx = ScrW()*.5
 local midy = ScrH()*.5
+local realang = Angle(0, 0, 0)
+local lastang = Angle(0, 0, 0)
 
 -- getting all members of the nonanon groups to mark them for later
 local nonanonp = {}
@@ -183,13 +186,43 @@ concommand.Add("+lenny_aim", function()
 	if GetConVarNumber("lenny_aimsnap") == 0 then
 		chat.AddText("lenny_aimsnap must be 1 !!!")
 	else
+		realang = LocalPlayer():EyeAngles()
+		lastang = LocalPlayer():EyeAngles()
 		hook.Add("CreateMove", "snappyaim", function(cmd)
+			realang = realang + cmd:GetViewAngles() - lastang
+			cmd:SetViewAngles(realang)
 			if disfromaim[1] and LocalPlayer():Alive() then
 				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
+					realang.y = math.NormalizeAngle(realang.y)
 					cmd:SetViewAngles((disfromaim[1][4] - LocalPlayer():GetShootPos()):Angle())
+					
+					local move = Vector(cmd:GetForwardMove(), cmd:GetSideMove(), cmd:GetUpMove())
+					move:Rotate(cmd:GetViewAngles() - realang)
+					cmd:SetForwardMove(move.x)
+					cmd:SetSideMove(move.y)
+					cmd:SetUpMove(move.z)
+					
+					
+					lastang = cmd:GetViewAngles()
+				elseif GetConVarNumber("lenny_aimsnap_preserve_angles") == 1 then
+					cmd:SetViewAngles(realang)
 				end
+			elseif GetConVarNumber("lenny_aimsnap_preserve_angles") == 1 then
+				cmd:SetViewAngles(realang)
 			end
+			lastang = cmd:GetViewAngles()
 		end)
+		if GetConVarNumber("lenny_aimsnap_preserve_angles") == 1 then
+			hook.Add("CalcView", "preservativeaim", function(ply, pos, ang, fov)
+				local eyeangles = LocalPlayer():EyeAngles()
+				view = {}
+				view.origin = pos
+				view.angles = realang
+				view.fov = fov
+				view.vm_angles = Angle(eyeangles.p, (realang.y * 2) - eyeangles.y, eyeangles.r)
+				return view
+			end)
+		end
 	end
 
 end)
@@ -197,6 +230,8 @@ end)
 concommand.Add("-lenny_aim", function()
 	hook.Remove("CreateMove", "snappyaim")
 	hook.Remove("Think", "snappyaim")
+	hook.Remove("CalcView", "preservativeaim")
+	LocalPlayer():SetEyeAngles(realang)
 end)
 
 
