@@ -15,6 +15,7 @@ CreateClientConVar("lenny_aimsnap_single_target", 0)
 CreateClientConVar("lenny_aimsnap_preserve_angles", 0)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
+local preserve = GetConVarNumber("lenny_aimsnap_preserve_angles")
 
 local midx = ScrW()*.5
 local midy = ScrH()*.5
@@ -204,15 +205,15 @@ concommand.Add("+lenny_aim", function()
 					
 					
 					lastang = cmd:GetViewAngles()
-				elseif GetConVarNumber("lenny_aimsnap_preserve_angles") == 1 then
+				elseif preserve then
 					cmd:SetViewAngles(realang)
 				end
-			elseif GetConVarNumber("lenny_aimsnap_preserve_angles") == 1 then
+			elseif preserve then
 				cmd:SetViewAngles(realang)
 			end
 			lastang = cmd:GetViewAngles()
 		end)
-		if GetConVarNumber("lenny_aimsnap_preserve_angles") == 1 then
+		if preserve then
 			hook.Add("CalcView", "preservativeaim", function(ply, pos, ang, fov)
 				local eyeangles = LocalPlayer():EyeAngles()
 				view = {}
@@ -259,7 +260,9 @@ end)
 cvars.AddChangeCallback("lenny_aimsnap_fov", function() 
 	FOV = GetConVarNumber("lenny_aimsnap_fov")
 end)
-
+cvars.AddChangeCallback("lenny_aimsnap_preserve_angles", function() 
+	preserve = GetConVarNumber("lenny_aimsnap_preserve_angles")
+end)
 
 
 MsgC(Color(0,255,0), "\nLennys AimSnap initialized!\n")
