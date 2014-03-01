@@ -38,71 +38,75 @@ local trackents = { -- Set Default entities here, lenny_ents to add while you're
 
 
 local function entmenu()
-local menu = vgui.Create("DFrame")
-menu:SetSize(500,350)
-menu:MakePopup()
-menu:SetTitle("Entity Finder")
-menu:Center()
-menu:SetKeyBoardInputEnabled()
+	local menu = vgui.Create("DFrame")
+	menu:SetSize(500,350)
+	menu:MakePopup()
+	menu:SetTitle("Entity Finder")
+	menu:Center()
+	menu:SetKeyBoardInputEnabled()
 
 
-local noton = vgui.Create("DListView",menu)
-noton:SetSize(200,menu:GetTall()-40)
-noton:SetPos(10,30)
-noton:AddColumn("Not Being Tracked")
+	local noton = vgui.Create("DListView",menu)
+	noton:SetSize(200,menu:GetTall()-40)
+	noton:SetPos(10,30)
+	noton:AddColumn("Not Being Tracked")
 
-local on = vgui.Create("DListView",menu)
-on:SetSize(200,menu:GetTall()-40)
-on:SetPos(menu:GetWide()-210,30)
-on:AddColumn("Being Tracked")
+	local on = vgui.Create("DListView",menu)
+	on:SetSize(200,menu:GetTall()-40)
+	on:SetPos(menu:GetWide()-210,30)
+	on:AddColumn("Being Tracked")
 
-local addent = vgui.Create("DButton",menu)
-addent:SetSize(50,25)
-addent:SetPos(menu:GetWide()/2-25,menu:GetTall()/2-20)
-addent:SetText("+")
-addent.DoClick = function() 
-	if noton:GetSelectedLine() != nil then 
-		local ent = noton:GetLine(noton:GetSelectedLine()):GetValue(1)
-		if !table.HasValue(trackents,ent) then 
-			table.insert(trackents,ent)
-			noton:RemoveLine(noton:GetSelectedLine())
-			on:AddLine(ent)
-		end
-	end
-end
-
-local rement = vgui.Create("DButton",menu)
-rement:SetSize(50,25)
-rement:SetPos(menu:GetWide()/2-25,menu:GetTall()/2+20)
-rement:SetText("-")
-rement.DoClick = function()
-	if on:GetSelectedLine() != nil then
-		local ent = on:GetLine(on:GetSelectedLine()):GetValue(1)
-		if table.HasValue(trackents,ent) then 
-			for k,v in pairs(trackents) do 
-				if v == ent then 
-				table.remove(trackents,k) 
-				end 
+	local addent = vgui.Create("DButton",menu)
+	addent:SetSize(50,25)
+	addent:SetPos(menu:GetWide()/2-25,menu:GetTall()/2-20)
+	addent:SetText("+")
+	addent.DoClick = function() 
+		if noton:GetSelectedLine() != nil then 
+			local ent = noton:GetLine(noton:GetSelectedLine()):GetValue(1)
+			if !table.HasValue(trackents,ent) then 
+				table.insert(trackents,ent)
+				noton:RemoveLine(noton:GetSelectedLine())
+				on:AddLine(ent)
 			end
-				on:RemoveLine(on:GetSelectedLine())
-				noton:AddLine(ent)
 		end
 	end
-end
 
-local added = {}
-for _,v in pairs(ents.GetAll()) do
+	local rement = vgui.Create("DButton",menu)
+	rement:SetSize(50,25)
+	rement:SetPos(menu:GetWide()/2-25,menu:GetTall()/2+20)
+	rement:SetText("-")
+	rement.DoClick = function()
+		if on:GetSelectedLine() != nil then
+			local ent = on:GetLine(on:GetSelectedLine()):GetValue(1)
+			if table.HasValue(trackents,ent) then 
+				for k,v in pairs(trackents) do 
+					if v == ent then 
+					table.remove(trackents,k) 
+					end 
+				end
+					on:RemoveLine(on:GetSelectedLine())
+					noton:AddLine(ent)
+			end
+		end
+	end
 
-if !table.HasValue(added,v:GetClass()) and !table.HasValue(trackents,v:GetClass()) and !string.find(v:GetClass(),"grav")  and !string.find(v:GetClass(),"phys") and v:GetClass() != "player" then
-noton:AddLine(v:GetClass())
-table.insert(added,v:GetClass())
-end
+	local added = {}
+	for _,v in pairs(ents.GetAll()) do
 
-end
+		if !table.HasValue(added,v:GetClass()) and !table.HasValue(trackents,v:GetClass()) and !string.find(v:GetClass(),"grav")  and !string.find(v:GetClass(),"phys") and v:GetClass() != "player" then
+			
+			table.insert(added,v:GetClass())
+		end
 
-for _,v in pairs(trackents) do
-on:AddLine(v)
-end
+	end
+	table.sort(added)
+	for k, v in pairs(added) do
+		noton:AddLine(v)
+	end
+	table.sort(trackents)
+	for _,v in pairs(trackents) do
+		on:AddLine(v)
+	end
 
 end
 concommand.Add("lenny_ents", entmenu)
