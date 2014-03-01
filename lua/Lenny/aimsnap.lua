@@ -16,6 +16,12 @@ CreateClientConVar("lenny_aimsnap_preserve_angles", 0)
 
 local FOV = GetConVarNumber("lenny_aimsnap_fov")
 local preserve = GetConVarNumber("lenny_aimsnap_preserve_angles")
+local ignoreblocked = GetConVarNumber("lenny_aimsnap_ignore_blocked")
+local singletarget = GetConVarNumber("lenny_aimsnap_single_target")
+local targetfriends = GetConVarNumber("lenny_aimsnap_target_friends")
+local targetnonanons = GetConVarNumber("lenny_aimsnap_target_nonanons")
+local targetnpcs = GetConVarNumber("lenny_aimsnap_target_npcs")
+local aimprioritize = GetConVarNumber("lenny_aimsnap_prioritize")
 
 local midx = ScrW()*.5
 local midy = ScrH()*.5
@@ -51,7 +57,7 @@ GetNonAnonPMembers()
 
 
 local function sorter(v1, v2)
-	if GetConVarNumber("lenny_aimsnap_prioritize") == 1 then
+	if aimprioritize == 1 then
 		if v1[5] > v2[5] then
 			return true
 		elseif v1[5] == v2[5] then
@@ -96,7 +102,7 @@ local function aimsnap()
 	disfromaim = {}
 	surface.SetDrawColor(Color(255,255,255))
 	local targets = player.GetAll()
-	if GetConVarNumber("lenny_aimsnap_target_npcs") == 1 then
+	if targetnpcs == 1 then
 		for k, v in pairs(ents.GetAll()) do
 			if v:IsNPC() then
 				table.insert(targets, v)
@@ -104,10 +110,10 @@ local function aimsnap()
 		end
 	end
 	for k, v in pairs(targets) do
-		if v:Health() > 0 or GetConVarNumber("lenny_aimsnap_single_target") == 1 then
+		if v:Health() > 0 or singletarget == 1 then
 			if v != LocalPlayer() and v:IsPlayer() then
-				if v:GetFriendStatus() != "friend" or GetConVarNumber("lenny_aimsnap_target_friends") == 1 then
-					if !(table.HasValue(nonanonp, v:SteamID64())) or GetConVarNumber("lenny_aimsnap_target_nonanons") == 1 then
+				if v:GetFriendStatus() != "friend" or targetfriends == 1 then
+					if !(table.HasValue(nonanonp, v:SteamID64())) or targetnonanons == 1 then
 						local hat = v:LookupBone("ValveBiped.Bip01_Head1")
 						local spine = v:LookupBone("ValveBiped.Bip01_Spine2")
 						if hat then
@@ -128,7 +134,33 @@ local function aimsnap()
 							local distocenter = math.abs(rollover(angdis, -180, 180))
 							local distoplayer = LocalPlayer():GetPos():Distance(v:GetPos())
 							if isinfov(distocenter) then
-								if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
+								if ignoreblocked == 1 then
+									if trac.Entity == NULL or trac.Entity == v then
+										table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg, distoplayer})
+									end
+								else
+									table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg, distoplayer})
+								end
+							end
+						elseif spine then
+							local hatpos, hatang = v:GetBonePosition(spine)
+							local scrpos = hatpos:ToScreen()
+							local tracedat = {}
+							tracedat.start = LocalPlayer():GetShootPos()
+							tracedat.endpos = hatpos
+							tracedat.mask = MASK_SHOT
+							local trac = util.TraceLine(tracedat)
+							local dmg = 0
+							if v:GetActiveWeapon():IsValid() then
+								if v:GetActiveWeapon():Clip1() > 0 and v:GetActiveWeapon().Primary != nil then
+									dmg = v:GetActiveWeapon().Primary.Damage or 0
+								end
+							end
+							local angdis = angledistance(LocalPlayer():GetShootPos():Distance(LocalPlayer():GetEyeTrace().HitPos), LocalPlayer():GetShootPos():Distance(hatpos), LocalPlayer():GetEyeTrace().HitPos:Distance(hatpos))
+							local distocenter = math.abs(rollover(angdis, -180, 180))
+							local distoplayer = LocalPlayer():GetPos():Distance(v:GetPos())
+							if isinfov(distocenter) then
+								if ignoreblocked == 1 then
 									if trac.Entity == NULL or trac.Entity == v then
 										table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg, distoplayer})
 									end
@@ -141,6 +173,7 @@ local function aimsnap()
 				end
 			elseif v:IsNPC() then
 				local hat = v:LookupBone("ValveBiped.Bip01_Head1")
+				local spine = v:LookupBone("ValveBiped.Bip01_Spine2")
 				if hat then
 					local hatpos, hatang = v:GetBonePosition(hat)
 					local scrpos = hatpos:ToScreen()
@@ -153,7 +186,27 @@ local function aimsnap()
 					local angdis = angledistance(LocalPlayer():GetShootPos():Distance(LocalPlayer():GetEyeTrace().HitPos), LocalPlayer():GetShootPos():Distance(hatpos), LocalPlayer():GetEyeTrace().HitPos:Distance(hatpos))
 					local distocenter = math.abs(rollover(angdis, -180, 180))
 					if isinfov(distocenter) then
-						if GetConVarNumber("lenny_aimsnap_ignore_blocked") == 1 then
+						if ignoreblocked == 1 then
+							if trac.Entity == NULL or trac.Entity == v then
+								table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
+							end
+						else
+							table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
+						end
+					end
+				elseif spine then
+					local hatpos, hatang = v:GetBonePosition(spine)
+					local scrpos = hatpos:ToScreen()
+					local tracedat = {}
+					tracedat.start = LocalPlayer():GetShootPos()
+					tracedat.endpos = hatpos
+					tracedat.mask = MASK_SHOT
+					local trac = util.TraceLine(tracedat)
+					local dmg = 0
+					local angdis = angledistance(LocalPlayer():GetShootPos():Distance(LocalPlayer():GetEyeTrace().HitPos), LocalPlayer():GetShootPos():Distance(hatpos), LocalPlayer():GetEyeTrace().HitPos:Distance(hatpos))
+					local distocenter = math.abs(rollover(angdis, -180, 180))
+					if isinfov(distocenter) then
+						if ignoreblocked == 1 then
 							if trac.Entity == NULL or trac.Entity == v then
 								table.insert(disfromaim, {v,  scrpos, distocenter, hatpos, dmg})
 							end
@@ -215,12 +268,12 @@ concommand.Add("+lenny_aim", function()
 		end)
 		if preserve then
 			hook.Add("CalcView", "preservativeaim", function(ply, pos, ang, fov)
-				local eyeangles = LocalPlayer():EyeAngles()
 				view = {}
 				view.origin = pos
 				view.angles = realang
 				view.fov = fov
-				view.vm_angles = Angle(eyeangles.p, (realang.y * 2) - eyeangles.y, eyeangles.r)
+				--view.vm_angles = Angle(ang.p, (realang.y * 2) - ang.y, ang.r)
+				view.vm_angles = ang
 				return view
 			end)
 		end
@@ -262,6 +315,24 @@ cvars.AddChangeCallback("lenny_aimsnap_fov", function()
 end)
 cvars.AddChangeCallback("lenny_aimsnap_preserve_angles", function() 
 	preserve = GetConVarNumber("lenny_aimsnap_preserve_angles")
+end)
+cvars.AddChangeCallback("lenny_aimsnap_ignore_blocked", function() 
+	ignoreblocked = GetConVarNumber("lenny_aimsnap_ignore_blocked")
+end)
+cvars.AddChangeCallback("lenny_aimsnap_single_target", function() 
+	singletarget = GetConVarNumber("lenny_aimsnap_single_target")
+end)
+cvars.AddChangeCallback("lenny_aimsnap_target_friends", function() 
+	targetfriends = GetConVarNumber("lenny_aimsnap_target_friends")
+end)
+cvars.AddChangeCallback("lenny_aimsnap_target_nonanons", function() 
+	targetnonanons = GetConVarNumber("lenny_aimsnap_target_nonanons")
+end)
+cvars.AddChangeCallback("lenny_aimsnap_target_npcs", function() 
+	targetnpcs = GetConVarNumber("lenny_aimsnap_target_npcs")
+end)
+cvars.AddChangeCallback("lenny_aimsnap_prioritize", function() 
+	aimprioritize = GetConVarNumber("lenny_aimsnap_prioritize")
 end)
 
 
