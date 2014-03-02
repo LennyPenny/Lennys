@@ -23,10 +23,7 @@ local nextnamechange = CurTime()
 local function spammer()
 
 	if namechange  == 1 then
-		if nextnamechange <= CurTime() then
-			RunConsoleCommand("lenny_namechange") --This runs first so it doesn't get missed by the chat delay. namechange.Priority > spam.Priority
-			nextnamechange = CurTime() + 5.5
-		end
+		RunConsoleCommand("lenny_namechange") --This runs first so it doesn't get missed by the chat delay. namechange.Priority > spam.Priority
 	end
 
 	if nextspam <= CurTime() then
