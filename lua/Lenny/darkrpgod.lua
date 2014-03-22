@@ -14,11 +14,11 @@ local function darkrpgod()
 end
 
 
-hook.Remove("Think", "darkrogod")
+hook.Remove("Think", "darkrpgod")
 timer.Simple(1, function()
-if GetConVarNumber("lenny_darkrpgod") == 1 then
-	hook.Add("Think", "darkrpgod", darkrpgod)
-end
+	if GetConVarNumber("lenny_darkrpgod") == 1 then
+		hook.Add("Think", "darkrpgod", darkrpgod)
+	end
 end)
 -- end of prep
 
