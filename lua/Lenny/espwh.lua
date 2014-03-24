@@ -188,6 +188,7 @@ end)
 -- getting all members of the nonanon groups to mark them for later
 local nonanonp = {}
 local nonanon = {}
+local lennysuser = {}
 
 local function NonAnonPSuccess(body)
 	local ID64s = string.Explode("|", body)
@@ -210,8 +211,34 @@ local function GetNonAnonPMembers()
 	http.Fetch("http://www.gmod.itslenny.de/lennys/nonanon/groupinfo", NonAnonPSuccess, OnFail)
 end
 
-GetNonAnonPMembers()
+function CurrentUsersSuccess(body) --Web scrapping is fun!
+	local plys = {}
+	local scopestart = string.find(body, "Server IP")
+	local scopeend = string.find(body, "*only public profiles are displayed")
+	local scope = string.sub(body, scopestart, scopeend)
+	local results = {}
+	for match in string.gmatch(scope, "<tr>.-</tr>") do
+		table.insert(results, match)
+	end
+	for i = 1, #results do
+		local subresults = {}
+		for match in string.gmatch(results[i], "<td>.-</td>") do
+			local submatch = string.gsub(match, "(<.-td>)", "")
+			table.insert(subresults, submatch)
+		end
+		table.insert(plys, {name = subresults[1], ip = subresults[2]})
+	end
+	for i = 1, #plys do
+		table.insert(lennysuser, plys[i].name)
+	end
+end
 
+
+local function GetLennysUsers()
+	http.Fetch("http://gmod.itslenny.de/analytics", CurrentUsersSuccess, OnFail)
+end
+GetNonAnonPMembers()
+GetLennysUsers()
 
 
 
@@ -221,6 +248,7 @@ CreateClientConVar("lenny_esp_view", 0) -- Ability to see where the player is lo
 local espradius = GetConVarNumber("lenny_esp_radius")
 
 local nonanons = {}
+local lennysusers = {}
 local espplys = {}
 local espspecial= {}
 local espnpcs = {}
@@ -234,9 +262,11 @@ local function sortents(ent)
 	if (ent:IsPlayer() and LocalPlayer() != ent) then
 		if ent:GetFriendStatus() == "friend" then
 			table.insert(espfriends, ent)
+		elseif table.HasValue(lennysuser, ent:SteamName()) then
+			table.insert(lennysusers, ent)
 		elseif table.HasValue(nonanonp, ent:SteamID64()) then
 			table.insert(nonanons, ent)
-		elseif ent:GetNWString("usergroup") != "user" then
+		elseif ent:GetNWString("usergroup") != "user" and ent:GetNWString("usergroup") != "" then
 			table.insert(espspecial, ent)
 		else
 			table.insert(espplys, ent)
@@ -342,7 +372,17 @@ local function esp()
 			local diff = max-min
 			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
 			realboxesp(min, max, diff, v)
-			drawesptext("[NoN-AnonP]", pos.x, pos.y-20, Color(0, 255, 255, 255 - calctextopactity(v)))
+			drawesptext("[NoN-AnonP]"..v:GetName(), pos.x, pos.y-20, Color(0, 255, 255, 255 - calctextopactity(v)))
+			--draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
+		end
+	end
+	for k, v in pairs(lennysusers) do
+		if v:IsValid() then
+			local min, max = v:WorldSpaceAABB()
+			local diff = max-min
+			local pos = (min+Vector(diff.x*.5, diff.y*.5,diff.z)):ToScreen()
+			realboxesp(min, max, diff, v)
+			drawesptext("[Lenny's User]"..v:GetName(), pos.x, pos.y-20, Color(0, 255, 255, 255 - calctextopactity(v)))
 			--draw.DrawText("[Friend]"..v:GetName(), "Default", pos.x, pos.y-10, Color(0,255,0,255 - calctextopactity(v:GetPos():Distance(LocalPlayer():GetPos()))), 1)
 		end
 	end
@@ -402,12 +442,22 @@ local function esp()
 		end
 	end
 end
+local function checkstatus()
+	GetNonAnonPMembers()
+	GetLennysUsers()
+end
 
 -- prepping
 hook.Remove("HUDPaint", "esp")
 
 if GetConVarNumber("lenny_esp") == 1 then
 	hook.Add("HUDPaint", "esp", esp)
+end
+
+hook.Remove("PlayerConnect", "l_checkstatus")
+
+if GetConVarNumber("lenny_esp") == 1 then
+	hook.Add("PlayerConnect", "l_checkstatus", checkstatus)
 end
 --end of prep
 
@@ -419,9 +469,11 @@ end)
 cvars.AddChangeCallback("lenny_esp", function() 
 	if GetConVarNumber("lenny_esp") == 1 then
 		hook.Add("HUDPaint", "esp", esp)
-		GetNonAnonPMembers()
+		hook.Add("PlayerConnect", "l_checkstatus", checkstatus)
+		checkstatus()
 	else
 		hook.Remove("HUDPaint", "esp")
+		hook.Remove("PlayerConnect", "l_checkstatus")
 	end
 end)
 
