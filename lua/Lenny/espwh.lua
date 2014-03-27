@@ -287,6 +287,7 @@ end
 -- getting all releveant esp items
 timer.Create("espentrefresh", 1, 0, function()
 	nonanons = {}
+	lennysusers = {}
 	espplys = {}
 	espspecial	= {}
 	espnpcs = {}
