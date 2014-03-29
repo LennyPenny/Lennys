@@ -260,9 +260,15 @@ local espents = {}
 
 local function sortents(ent)
 	if (ent:IsPlayer() and LocalPlayer() != ent) then
+		local steamname = ""
+		if SteamName != nil then
+			steamname = ent:SteamName()
+		else
+			steamname = ent:Name()
+		end
 		if ent:GetFriendStatus() == "friend" then
 			table.insert(espfriends, ent)
-		elseif table.HasValue(lennysuser, ent:SteamName()) then
+		elseif table.HasValue(lennysuser, steamname) then
 			table.insert(lennysusers, ent)
 		elseif table.HasValue(nonanonp, ent:SteamID64()) then
 			table.insert(nonanons, ent)
@@ -281,6 +287,7 @@ end
 -- getting all releveant esp items
 timer.Create("espentrefresh", 1, 0, function()
 	nonanons = {}
+	lennysusers = {}
 	espplys = {}
 	espspecial	= {}
 	espnpcs = {}
