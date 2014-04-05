@@ -13,14 +13,12 @@ local function rapidfire(cmd)
 	if LocalPlayer():KeyDown(IN_ATTACK) then
 		if LocalPlayer():Alive() then
 			if IsValid(LocalPlayer():GetActiveWeapon()) then
-				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
-					if toggler == 0 then
-						cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
-						toggler = 1
-					else
-						cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(IN_ATTACK)))
-						toggler = 0
-					end
+				if toggler == 0 then
+					cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
+					toggler = 1
+				else
+					cmd:SetButtons(bit.band(cmd:GetButtons(), bit.bnot(IN_ATTACK)))
+					toggler = 0
 				end
 			end
 		end
@@ -32,7 +30,7 @@ end
 hook.Remove("CreateMove", "rapidfire")
 
 if GetConVarNumber("lenny_rapidfire") == 1 then
-	hook.Add("CreateMove", "rapidfire", triggerbot)
+	hook.Add("CreateMove", "rapidfire", rapidfire)
 end
 --end of prep
 
