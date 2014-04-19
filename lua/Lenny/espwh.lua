@@ -119,7 +119,7 @@ timer.Create("entrefresh", 1, 0, function()
 	for k, v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), radius)) do
 		if (v:IsPlayer() and !(LocalPlayer() == v)) or v:IsNPC() then
 			table.insert(plys, v)
-		elseif v:GetClass() == "prop_physics" and not noprops then
+		elseif v:GetClass() == "prop_physics" and noprops == 0 then
 			table.insert(props, v)
 		end
 	end
@@ -258,6 +258,15 @@ local esp
 local espents = {}
 --same reason as in the wh
 
+local function isfriend(ent)
+	if Lenny then
+		if Lenny.friends then
+			return table.HasValue(Lenny.friends, ent)
+		end
+	end
+	return false
+end
+
 local function sortents(ent)
 	if (ent:IsPlayer() and LocalPlayer() != ent) then
 		local steamname = ""
@@ -267,6 +276,8 @@ local function sortents(ent)
 			steamname = ent:Name()
 		end
 		if ent:GetFriendStatus() == "friend" then
+			table.insert(espfriends, ent)
+		elseif isfriend(ent) then
 			table.insert(espfriends, ent)
 		elseif table.HasValue(lennysuser, steamname) then
 			table.insert(lennysusers, ent)
