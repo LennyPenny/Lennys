@@ -43,7 +43,7 @@ local noided_dummy = "iVBORw0KGgoAAAANSUhEUgAAAAcAAAAECAIAAADNpLIqAAAAAXNSR0IArs
 local actualRenderCapture = _G.render.Capture
 local encodeData	  = util.Base64Encode;
 
-local enabled = CreateClientConVar("lenny_antiscreenshot", "0")
+local enabled = CreateClientConVar("lenny_antiscreenshot", "1")
 local function antiscreenshot()
 	if enabled:GetBool() then
 		_G.render.Capture = function(data)
