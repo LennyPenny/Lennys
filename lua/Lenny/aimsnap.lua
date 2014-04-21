@@ -206,7 +206,7 @@ local function calcaim(v)
 	if hat then
 		hatpos = v:GetBonePosition(hat)
 	elseif spine then
-		hatpos = v:GetBonePosition(hat)
+		hatpos = v:GetBonePosition(spine)
 	else
 		hatpos = origin
 	end
