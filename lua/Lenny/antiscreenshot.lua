@@ -31,7 +31,6 @@ screengrab snip
         ~noided
 ]]--
 
-local missingjpg = file.Read("materials/missing256.jpg", "GAME")
 local missingpng = file.Read("materials/missing256.png", "GAME")
 
 local noided_dummy = "iVBORw0KGgoAAAANSUhEUgAAAAcAAAAECAIAAADNpLIqAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYSURBVBhXY2BgYmBmYGFgZEAFlIkyMAAACDAAKdIBq3cAAAAASUVORK5CYII="
@@ -44,12 +43,12 @@ local noided_dummy = "iVBORw0KGgoAAAANSUhEUgAAAAcAAAAECAIAAADNpLIqAAAAAXNSR0IArs
 local actualRenderCapture = _G.render.Capture
 local encodeData	  = util.Base64Encode;
 
-local enabled = CreateClientConVar("lenny_antiscreenshot", "0")
+local enabled = CreateClientConVar("lenny_antiscreenshot", "1")
 local function antiscreenshot()
 	if enabled:GetBool() then
 		_G.render.Capture = function(data)
 			if data.format == "jpeg" then
-				return missingjpg
+				return missingpng
 			elseif data.format == "png" then
 				return missingpng
 			end
