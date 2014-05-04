@@ -7,7 +7,7 @@ Credit to the author must be given when using/sharing this work or derivative wo
 Lenny = Lenny or {} -- ohoh global table.... watch out!!!!!
 
 local function ReloadLennys()
-	include("Lenny.lua")
+	include("lennyOffline.lua")
 end
 concommand.Add("lenny_reload", ReloadLennys)
 
