@@ -10,7 +10,9 @@ local toggler = 0
 
 local function triggerbot(cmd)
 	if LocalPlayer():Alive() then
-		local target = LocalPlayer():GetEyeTrace().Entity
+		local td = {start = LocalPlayer():GetShootPos(), endpos = LocalPlayer():GetShootPos() + LocalPlayer():EyeAngles():Forward() * 65535, filter = LocalPlayer(), mask = MASK_SHOT}
+		local tr = util.TraceLine(td)
+		local target = tr.Entity
 		if target:IsValid() then
 			if IsValid(LocalPlayer():GetActiveWeapon()) then
 				if LocalPlayer():GetActiveWeapon():Clip1() > 0 then
