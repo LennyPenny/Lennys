@@ -312,7 +312,7 @@ concommand.Add("+lenny_aim", function()
 					
 					if preserve == 1 then
 						local move = Vector(cmd:GetForwardMove(), cmd:GetSideMove(), cmd:GetUpMove())
-						move:Rotate(Angle((cmd:GetViewAngles()).p, (cmd:GetViewAngles() - realang).y, (cmd:GetViewAngles() - realang).r))
+						move:Rotate(Angle(0, (cmd:GetViewAngles() - realang).y, (cmd:GetViewAngles() - realang).r))
 						cmd:SetForwardMove(move.x)
 						cmd:SetSideMove(move.y)
 						cmd:SetUpMove(move.z)
