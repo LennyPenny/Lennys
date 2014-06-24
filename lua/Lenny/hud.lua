@@ -9,7 +9,9 @@ CreateClientConVar("lenny_hud", 1)
 local w, h = ScrW(), ScrH()
 
 local function hud()
-	draw.SimpleText("Speed: "..math.Round(LocalPlayer():GetVelocity():Length()), "Default", w*.5, 0, Color(0,0,0), 1)
+	local vel = LocalPlayer():GetVelocity()
+	vel.z = 0
+	draw.SimpleText("Speed: "..math.Round(vel:Length()), "Default", w*.5, 0, Color(0,0,0), 1)
 end
 
 
