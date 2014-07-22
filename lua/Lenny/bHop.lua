@@ -7,15 +7,12 @@ Credit to the author must be given when using/sharing this work or derivative wo
 
 CreateClientConVar("lenny_bhop", 0)
 
+function bhopper(cmd)
+	if not cmd:KeyDown(IN_JUMP) then return end --do we even want to bhop
+	if LocalPlayer():IsOnGround() then return end --would we wanna jump
+	if LocalPlayer():GetMoveType() == MOVETYPE_NOCLIP or LocalPlayer():WaterLevel() >= 2 then return end --does it make sense to jump?
 
-local function bhopper( cmd )
-	if cmd:KeyDown(IN_JUMP) and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP and LocalPlayer():WaterLevel() < 2 then
-		local buttonsetter = cmd:GetButtons()
-		if !LocalPlayer():IsOnGround() then
-			buttonsetter = bit.band(buttonsetter, bit.bnot(IN_JUMP))
-		end
-		cmd:SetButtons(buttonsetter)
-	end
+	cmd:SetButtons(cmd:GetButtons() - IN_JUMP) --while in air, don't jump
 end
 
 
