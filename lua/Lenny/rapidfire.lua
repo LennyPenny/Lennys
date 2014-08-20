@@ -12,7 +12,7 @@ local toggler = 0
 local function rapidfire(cmd)
 	if LocalPlayer():KeyDown(IN_ATTACK) then
 		if LocalPlayer():Alive() then
-			if IsValid(LocalPlayer():GetActiveWeapon()) then
+			if IsValid(LocalPlayer():GetActiveWeapon()) and LocalPlayer():GetActiveWeapon():GetClass() != "weapon_physgun" then
 				if toggler == 0 then
 					cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK))
 					toggler = 1
