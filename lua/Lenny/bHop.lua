@@ -17,6 +17,17 @@ local ccd = 0; -- current cooldown
 local lastc = 0; -- last cmd number
 local lp = LocalPlayer(); -- localplayer
 
+local function FWorBW(vel, ang)
+	local a = vel;
+	a:Rotate(-ang) 
+	if(a.x > 0) then 
+		return FW;
+	elseif(a.x < 0) then
+		return BW;
+	end
+	return NONE
+end
+
 local function bhopper(cmd)
 	if(lp:GetMoveType() == MOVETYPE_NOCLIP or lp:WaterLevel() >= 2) then return; end --does it make sense to jump?
 	if (cmd:KeyDown(IN_JUMP)) then
