@@ -8,6 +8,11 @@ CreateClientConVar("lenny_pkill_prop", "models/props_c17/furnitureStove001a.mdl"
 CreateClientConVar("lenny_pkill_remover", 0.9)
 CreateClientConVar("lenny_weap_lagcomp", 0.1)
 
+surface.CreateFont("pcam_font",{font = "Arial", size = 40, weight = 100000, antialias = 0})
+function DrawOutlinedText ( title, font, x, y, color, OUTsize, OUTcolor )
+	draw.SimpleTextOutlined ( title, font, x, y, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, OUTsize, OUTcolor )
+end
+
 local function propkill()
 	local atttime = GetConVarNumber("lenny_weap_lagcomp")
 	if LocalPlayer():GetActiveWeapon():GetClass() != "weapon_physgun" then
@@ -40,18 +45,55 @@ local toggler = 0
 local function tttpropkill()
 	if toggler == 0 then
 		toggler = 1
-		--[[LocalPlayer():SetEyeAngles(Angle(0,LocalPlayer():GetAimVector():Angle().y+180,0))   --since the magneto stick loses control when we turn too fast, I can't use this :/]]
+		//for i=1, 180 do
+		//	timer.Simple(0.01, function() LocalPlayer():SetEyeAngles(Angle(0,LocalPlayer():GetAimVector():Angle().y+i,0)) end) -- yo your right lenny, it sucks ass that we cant though :/
+		//end
 		hook.Add("CalcView", "pcam", function(ply, ori, ang, fov, nz, fz)
  			local view = {}
 
 			view.origin = ori
-			view.angles = Angle(0,ang.y+180, 0)
+			view.angles = Angle(ang.p,ang.y+180, 0) // < looks better lenny
 			view.fov = fov
 
- 			return view		
+ 			return view
+		end)
+		
+		hook.Add("CreateMove", "pcam", function(cmd) -- Lets fix the controls ;)
+			if input.IsKeyDown(KEY_W) then
+				RunConsoleCommand("+back")
+			else
+				RunConsoleCommand("-back")
+			end
+			
+			if input.IsKeyDown(KEY_S) then
+				RunConsoleCommand("+forward")
+			else
+				RunConsoleCommand("-forward")
+			end
+			
+			if input.IsKeyDown(KEY_A) then
+				RunConsoleCommand("+moveright")
+			else
+				RunConsoleCommand("-moveright")
+			end
+			
+			if input.IsKeyDown(KEY_D) then
+				RunConsoleCommand("+moveleft")
+			else
+				RunConsoleCommand("-moveleft")
+			end
+		end)
+		hook.Add("CalcViewModelView", "pcam", function(wep, vm, oldPos, oldAng, pos, ang)
+				return pos, Angle(ang.p,ang.y+180, 0) -- Looks better
+		end)
+		hook.Add("HUDPaint", "pcam", function() -- Looks better
+			DrawOutlinedText("TTT PROP KILL MODE", "pcam_font", ScrW()/2, ScrH()-100, Color(255, 0, 0), 2, Color(0, 0, 0))
 		end)
 	else
-		hook.Remove("CalcView", "pcam")
+		hook.Remove("CalcView", "pcam") --Lets remove all the dem hooks
+		hook.Remove("CreateMove", "pcam")
+		hook.Remove("CalcViewModelView", "pcam")
+		hook.Remove("HUDPaint", "pcam")
 		local preaim = LocalPlayer():GetAimVector():Angle()
 		local newaim = LocalPlayer():GetAimVector():Angle()
 		hook.Add("CreateMove", "180!", function(cmd)
