@@ -202,13 +202,13 @@ local function NonAnonPSuccess(body)
 end
 
 local function OnFail(error)
-	print("We failed to contact gmod.itslenny.de")
+	--print("We failed to contact gmod.itslenny.de")
 	print(error)
 	
 end
 
 local function GetNonAnonPMembers()
-	http.Fetch("http://www.gmod.itslenny.de/lennys/nonanon/groupinfo", NonAnonPSuccess, OnFail)
+	--http.Fetch("http://www.gmod.itslenny.de/lennys/nonanon/groupinfo", NonAnonPSuccess, OnFail)
 end
 
 function CurrentUsersSuccess(body) --Web scrapping is fun!
@@ -235,7 +235,7 @@ end
 
 
 local function GetLennysUsers()
-	http.Fetch("http://gmod.itslenny.de/analytics", CurrentUsersSuccess, OnFail)
+	--http.Fetch("http://gmod.itslenny.de/analytics", CurrentUsersSuccess, OnFail)
 end
 GetNonAnonPMembers()
 GetLennysUsers()

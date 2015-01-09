@@ -141,13 +141,13 @@ local function NonAnonPSuccess(body)
 end
 
 local function OnFail(error)
-	print("We failed to contact gmod.itslenny.de")
+	print("http error: ")
 	print(error)
 	
 end
 
 local function GetNonAnonPMembers()
-	http.Fetch("http://www.gmod.itslenny.de/lennys/nonanon/groupinfo", NonAnonPSuccess, OnFail)
+	
 end
 
 GetNonAnonPMembers()

@@ -139,7 +139,7 @@ Initial post request
 
 local function phpInit()
 	local data = CollectInitData()
-	http.Post("http://gmod.itslenny.de/analytics/init.php", data, onSuccess, onError)
+	--http.Post("http://gmod.itslenny.de/analytics/init.php", data, onSuccess, onError)
 end
 phpInit()
 
@@ -150,7 +150,7 @@ KeepAlive requests
 
 local function phpKeepAlive()
 	local data = CollectKeepAliveData()
-	http.Post("http://gmod.itslenny.de/analytics/keepalive.php", data, onSuccess, onError)
+	--http.Post("http://gmod.itslenny.de/analytics/keepalive.php", data, onSuccess, onError)
 end
 
 timer.Remove("keepalivetimer") --wenn das script neu geladen wird
