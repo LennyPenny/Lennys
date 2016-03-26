@@ -49,13 +49,13 @@ local function lennymenu()
 	frame.Paint = function ()
 		lennymotd(fw, fh, Color(30,30,30,255))
 	end
-	
+
 	local closebtn = vgui.Create("DButton", frame)
 	closebtn:SetSize(35,35)
 	closebtn:SetText("")
 	closebtn:SetPos(fw-60, 20)
 	closebtn.DoClick = function()
-		frame:Close()
+		frame:Hide()
 	end
 	closebtn.Paint = function()
 		lennymotd(closebtn:GetWide(), closebtn:GetTall(), Color(30,30,30,255))
